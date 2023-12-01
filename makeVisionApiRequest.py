@@ -19,7 +19,7 @@ def encode_image(image_path):
 
 
 # Path to your image
-image_path = "path_to_your_image.jpg"
+image_path = "plane.jpg"
 
 # Getting the base64 string
 base64_image = encode_image(image_path)

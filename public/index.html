@@ -3,14 +3,19 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Upload Picture</title>
+    <title>Drawing Generator</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="picture" accept="image/*">
+        <input type="file" id="file" name="picture" accept="image/*">
+        <label for="file" class="custom-file-upload">
+            Choose File
+        </label>
         <button type="submit">Upload</button>
     </form>
+
 </body>
 
 </html>

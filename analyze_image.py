@@ -61,7 +61,9 @@ response = requests.post(
 
 # Extract the description from the analysis response
 # This assumes the response format includes a text description in the expected part of the response JSON
-description = response.json()['choices'][0]['message']['content']
+description_input = response.json()['choices'][0]['message']['content']
+description_fixed = "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: "
+description = description_fixed + description_input
 
 
 # Image generation payload
@@ -78,4 +80,5 @@ generation_response = client.images.generate(**generation_payload)
 
 # Extract the image URL from the generation response
 image_url = generation_response.data[0].url
-print(image_url)
+print(f"Image URL: {image_url}")
+print(f"Description: {description}")

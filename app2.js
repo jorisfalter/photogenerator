@@ -42,6 +42,7 @@ app.post("/upload", upload.single("picture"), (req, res) => {
       res.status(500).json({ error: "Error parsing analysis results" });
     }
   });
+  //   res.redirect("/");
 });
 
 // Root route to serve the index.html file

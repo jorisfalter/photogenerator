@@ -23,20 +23,24 @@ const upload = multer({ storage: storage });
 app.use(express.static("public"));
 
 app.post("/upload", upload.single("picture"), (req, res) => {
-  // Image is uploaded and now present in req.file.path
   const imagePath = req.file.path;
 
-  // Call Python script with the uploaded image path
   exec(`python3 analyze_image.py "${imagePath}"`, (error, stdout, stderr) => {
     if (error) {
       console.error(`exec error: ${error}`);
-      return res.status(500).send("Error analyzing image");
+      return res.status(500).json({ error: "Error analyzing image" });
     }
-    console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
+    if (stderr) {
+      console.error(`stderr: ${stderr}`);
+    }
 
-    // Send response back to client with the analysis result
-    res.send(stdout);
+    try {
+      const output = JSON.parse(stdout);
+      res.json(output); // Send the parsed JSON to the client
+    } catch (parseError) {
+      console.error(`Error parsing stdout: ${parseError}`);
+      res.status(500).json({ error: "Error parsing analysis results" });
+    }
   });
 });
 

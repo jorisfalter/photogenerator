@@ -3,6 +3,7 @@ import base64
 import requests
 import os
 import sys
+import json
 from dotenv import load_dotenv
 
 # Load .env file
@@ -80,5 +81,13 @@ generation_response = client.images.generate(**generation_payload)
 
 # Extract the image URL from the generation response
 image_url = generation_response.data[0].url
-print(f"Image URL: {image_url}")
-print(f"Description: {description}")
+
+# print(f"Image URL: {image_url}")
+# print(f"Description: {description}")
+
+
+output = {
+    "image_url": image_url,
+    "description": description
+}
+print(json.dumps(output))

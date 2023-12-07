@@ -4,6 +4,8 @@ const { exec } = require("child_process");
 const path = require("path");
 const app = express();
 
+app.set("view engine", "ejs"); // Set EJS as the template engine
+
 // Configure multer (file upload middleware)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -36,13 +38,17 @@ app.post("/upload", upload.single("picture"), (req, res) => {
 
     try {
       const output = JSON.parse(stdout);
-      res.json(output); // Send the parsed JSON to the client
+      res.render("result", {
+        image_url: output.image_url,
+        description: output.description,
+      });
     } catch (parseError) {
       console.error(`Error parsing stdout: ${parseError}`);
-      res.status(500).json({ error: "Error parsing analysis results" });
+      res
+        .status(500)
+        .render("error", { error: "Error parsing analysis results" });
     }
   });
-  //   res.redirect("/");
 });
 
 // Root route to serve the index.html file

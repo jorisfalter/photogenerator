@@ -16,6 +16,7 @@
                     // Update the image and description on the page
                     document.getElementById('generatedImage').src = data.image_url;
                     document.getElementById('imageDescription').textContent = data.description;
+
                 })
                 .catch(error => {
                     console.error('Error:', error);

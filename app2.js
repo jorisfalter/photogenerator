@@ -57,7 +57,7 @@ app.get("/", (req, res) => {
 });
 
 // Start server
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT is not set
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -55,7 +55,7 @@ app.post("/upload", upload.single("picture"), (req, res) => {
   //   });
 
   const imageBuffer = req.file.buffer;
-
+  console.log("going to python");
   const pythonProcess = spawn("python3", ["analyze_image.py"]);
 
   let stdoutData = "";

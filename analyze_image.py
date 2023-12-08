@@ -5,6 +5,8 @@ import os
 import sys
 import json
 from dotenv import load_dotenv
+import sys
+import base64
 
 # Load .env file
 load_dotenv()
@@ -18,17 +20,26 @@ client = OpenAI(api_key=api_key)
 # Function to encode the image
 
 
-def encode_image(image_path):
-    with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+# def encode_image(image_path):
+#     with open(image_path, "rb") as image_file:
+#         return base64.b64encode(image_file.read()).decode('utf-8')
 
+# start temp storage
+
+def encode_image_from_stdin():
+    return base64.b64encode(sys.stdin.buffer.read()).decode('utf-8')
+
+
+# Getting the base64 string from stdin
+base64_image = encode_image_from_stdin()
+# end temp storage
 
 # Accept image path from command line argument
 # The first argument is the script name, so we take the second argument.
-image_path = sys.argv[1]
+# image_path = sys.argv[1]
 
-# Getting the base64 string
-base64_image = encode_image(image_path)
+# # Getting the base64 string
+# base64_image = encode_image(image_path)
 
 headers = {
     "Content-Type": "application/json",

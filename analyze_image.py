@@ -17,6 +17,8 @@ api_key = os.getenv('API_KEY')
 # Initialize the OpenAI client
 client = OpenAI(api_key=api_key)
 
+print("we're inside python 1")
+
 # Function to encode the image
 
 

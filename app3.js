@@ -4,8 +4,10 @@ const FormData = require('form-data');
 const axios = require('axios');
 const app = express();
 
-// ... other configurations ...
+app.set("view engine", "ejs"); // Set EJS as the template engine
 
+// Configure multer for memory storage
+const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
 
 app.post('/upload', upload.single('picture'), async (req, res) => {
@@ -57,4 +59,13 @@ app.post('/upload', upload.single('picture'), async (req, res) => {
     }
 });
 
-// ... other routes and server start ...
+// Root route to serve the index.html file
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  });
+  
+  // Start server
+  const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT is not set
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+  });

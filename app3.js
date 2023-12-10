@@ -3,7 +3,7 @@ const multer = require("multer");
 const FormData = require("form-data");
 const axios = require("axios");
 const app = express();
-const openai = require("openai");
+const OpenAI = require("openai");
 const path = require("path");
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
@@ -11,6 +11,7 @@ app.set("view engine", "ejs"); // Set EJS as the template engine
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
+const openai = new OpenAI();
 
 app.post("/upload", upload.single("picture"), async (req, res) => {
   try {
@@ -44,11 +45,9 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       max_tokens: 300,
     };
 
-    const response = await axios.post(
-      "https://api.openai.com/v1/chat/completions",
-      payload,
-      { headers: headers }
-    );
+    const response = await openai.chat.completions.create(payload, {
+      headers: headers,
+    });
 
     const descriptionInput = response.data.choices[0].message.content;
     const description =

@@ -1,97 +1,81 @@
+require("dotenv").config();
+
 const express = require("express");
 const multer = require("multer");
-const { exec } = require("child_process");
-const path = require("path");
+const FormData = require("form-data");
+const axios = require("axios");
 const app = express();
-const { spawn } = require("child_process");
+const OpenAI = require("openai");
+const path = require("path");
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
 
-// // Configure multer (file upload middleware)
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "uploads/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(
-//       null,
-//       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-//     );
-//   },
-// });
-
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
+const upload = multer({ storage: multer.memoryStorage() });
+const openAiApiKey = process.env.API_KEY; // Ensure your API key is loaded from environment variables
+const openai = new OpenAI({ apiKey: openAiApiKey });
 
-const upload = multer({ storage: storage });
+app.post("/upload", upload.single("picture"), async (req, res) => {
+  try {
+    const imageBuffer = req.file.buffer;
+    const base64Image = imageBuffer.toString("base64");
 
-// Serve static files from 'public' directory
-app.use(express.static("public"));
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${openAiApiKey}`,
+    };
 
-app.post("/upload", upload.single("picture"), (req, res) => {
-  //   const imagePath = req.file.path;
+    const payload = {
+      model: "gpt-4-vision-preview",
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "What’s in this image?",
+            },
+            {
+              type: "image_url",
+              image_url: `data:image/jpeg;base64,${base64Image}`,
+            },
+          ],
+        },
+      ],
+      max_tokens: 300,
+    };
 
-  //   exec(`python3 analyze_image.py "${imagePath}"`, (error, stdout, stderr) => {
-  //     if (error) {
-  //       console.error(`exec error: ${error}`);
-  //       return res.status(500).json({ error: "Error analyzing image" });
-  //     }
-  //     if (stderr) {
-  //       console.error(`stderr: ${stderr}`);
-  //     }
+    const response = await openai.chat.completions.create(payload, {
+      headers: headers,
+    });
 
-  //     try {
-  //       const output = JSON.parse(stdout);
-  //       res.render("result", {
-  //         image_url: output.image_url,
-  //         description: output.description,
-  //       });
-  //     } catch (parseError) {
-  //       console.error(`Error parsing stdout: ${parseError}`);
-  //       res
-  //         .status(500)
-  //         .render("error", { error: "Error parsing analysis results" });
-  //     }
-  //   });
+    console.log(response.data);
+    const descriptionInput = response.choices[0].message.content;
+    // const descriptionInput = response.data.choices[0].message.content;
+    const description =
+      "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: " +
+      descriptionInput;
 
-  const imageBuffer = req.file.buffer;
-  console.log("going to python");
-  const pythonProcess = spawn("python3", ["analyze_image.py"]);
+    // ... logic to handle the description and generate an image ...
+    const imageGenResponse = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: description,
+      n: 1,
+      size: "1024x1024",
+    });
+    image_url = imageGenResponse.data[0].url;
 
-  let stdoutData = "";
-  let stderrData = "";
+    // const generatedImageUrl = imageGenResponse.data.imageUrl;
 
-  pythonProcess.stdout.on("data", (data) => {
-    stdoutData += data.toString();
-  });
-
-  pythonProcess.stderr.on("data", (data) => {
-    stderrData += data.toString();
-  });
-
-  pythonProcess.on("close", (code) => {
-    if (code !== 0) {
-      console.error(`exec error: ${stderrData}`);
-      return res.status(500).json({ error: "Error analyzing image" });
-    }
-
-    try {
-      const output = JSON.parse(stdoutData);
-      res.render("result", {
-        image_url: output.image_url,
-        description: output.description,
-      });
-    } catch (parseError) {
-      console.error(`Error parsing stdout: ${parseError}`);
-      res
-        .status(500)
-        .render("error", { error: "Error parsing analysis results" });
-    }
-  });
-
-  // Write the image buffer to the Python process
-  pythonProcess.stdin.write(imageBuffer);
-  pythonProcess.stdin.end();
+    res.render("result", {
+      image_url: image_url,
+      description: description,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).render("error", { error: "Error processing image" });
+  }
 });
 
 // Root route to serve the index.html file

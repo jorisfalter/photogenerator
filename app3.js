@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const multer = require("multer");
 const FormData = require("form-data");
@@ -11,14 +13,13 @@ app.set("view engine", "ejs"); // Set EJS as the template engine
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
-const openai = new OpenAI();
+const openAiApiKey = process.env.API_KEY; // Ensure your API key is loaded from environment variables
+const openai = new OpenAI({ apiKey: openAiApiKey });
 
 app.post("/upload", upload.single("picture"), async (req, res) => {
   try {
     const imageBuffer = req.file.buffer;
     const base64Image = imageBuffer.toString("base64");
-
-    const openAiApiKey = process.env.API_KEY; // Ensure your API key is loaded from environment variables
 
     const headers = {
       "Content-Type": "application/json",

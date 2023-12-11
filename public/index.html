@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Drawing Generator</title>
-    <script>
+    <!-- <script>
         function uploadImage() {
             var formData = new FormData(document.getElementById('uploadForm'));
             fetch('/upload', {
@@ -27,12 +27,12 @@
             e.preventDefault();
             uploadImage();
         });
-    </script>
-    <link rel="stylesheet" href="style.css">
+    </script> -->
+    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
         <input type="file" id="file" name="picture" accept="image/*">
         <label for="file" class="custom-file-upload">
             Choose File

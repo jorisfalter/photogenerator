@@ -3,12 +3,13 @@ require("dotenv").config();
 const express = require("express");
 const multer = require("multer");
 const FormData = require("form-data");
-const axios = require("axios");
 const app = express();
 const OpenAI = require("openai");
 const path = require("path");
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
+
+app.use(express.static("public"));
 
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
@@ -50,7 +51,6 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       headers: headers,
     });
 
-    console.log(response.data);
     const descriptionInput = response.choices[0].message.content;
     // const descriptionInput = response.data.choices[0].message.content;
     const description =
@@ -65,8 +65,6 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       size: "1024x1024",
     });
     image_url = imageGenResponse.data[0].url;
-
-    // const generatedImageUrl = imageGenResponse.data.imageUrl;
 
     res.render("result", {
       image_url: image_url,

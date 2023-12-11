@@ -50,24 +50,26 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       headers: headers,
     });
 
-    const descriptionInput = response.data.choices[0].message.content;
+    console.log(response.data);
+    const descriptionInput = response.choices[0].message.content;
+    // const descriptionInput = response.data.choices[0].message.content;
     const description =
       "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: " +
       descriptionInput;
 
     // ... logic to handle the description and generate an image ...
-    const imageGenResponse = await openai.createImage({
+    const imageGenResponse = await openai.images.generate({
       model: "dall-e-3",
       prompt: description,
       n: 1,
       size: "1024x1024",
     });
-    image_url = response.data.data[0].url;
+    image_url = imageGenResponse.data[0].url;
 
-    const generatedImageUrl = imageGenResponse.data.imageUrl;
+    // const generatedImageUrl = imageGenResponse.data.imageUrl;
 
     res.render("result", {
-      image_url: generatedImageUrl,
+      image_url: image_url,
       description: description,
     });
   } catch (error) {

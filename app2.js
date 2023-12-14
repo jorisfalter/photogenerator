@@ -52,7 +52,6 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     });
 
     const descriptionInput = response.choices[0].message.content;
-    // const descriptionInput = response.data.choices[0].message.content;
     const description =
       "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: " +
       descriptionInput;

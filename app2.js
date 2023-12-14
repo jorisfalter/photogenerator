@@ -35,7 +35,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "What’s in this image?",
+              text: "can you describe this drawing?",
             },
             {
               type: "image_url",

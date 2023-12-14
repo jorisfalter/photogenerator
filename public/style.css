@@ -102,4 +102,6 @@ footer {
     text-align: center;
     z-index: 1000; /* Ensure it stays on top of other content */
     box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* Optional: adds shadow for depth */
+    color: green;
+    font-size:12px;
 }

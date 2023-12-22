@@ -81,6 +81,10 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+app.get("/test", (req, res) => {
+  res.render("result-test");
+});
+
 // Start server
 const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT is not set
 app.listen(PORT, () => {

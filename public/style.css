@@ -109,3 +109,8 @@ footer {
 .result-page{
     text-align:center
 }
+
+.buttons-result{
+    padding: 10px;
+    color:yellow;
+}

@@ -41,7 +41,7 @@ form {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width:500px;
+    width:400px;
 }
 
 .custom-file-upload {
@@ -117,3 +117,17 @@ footer {
     padding: 10px;
     color:yellow;
 }
+
+@keyframes gradient-cycle {
+    0%, 100% {
+      background: linear-gradient(to right, #999999, #eeeeee);
+    }
+    50% {
+      background: linear-gradient(to right, #eeeeee, #999999);
+    }
+  }
+  
+  .button-animate {
+    animation: gradient-cycle 3s ease infinite;
+  }
+  

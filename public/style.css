@@ -130,4 +130,10 @@ footer {
   .button-animate {
     animation: gradient-cycle 3s ease infinite;
   }
+
+  .thumb {
+    height: 100px; /* You can set the size as you need */
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+}
   

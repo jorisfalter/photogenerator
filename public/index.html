@@ -19,20 +19,23 @@
 
         <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">
             <div>
-                <h2>Free Image Generator for Children</h2>
+                <h2>Free Image Generator </h2>
+                <h3>Make Your Children's Drawings Become Real</h3>
             </div>
-            <!-- <input type="file" id="file" name="picture" accept="image/*" capture> -->
-            <input type="file" id="file" name="picture" accept="image/*">
 
             <!-- upload button -->
+            <!-- <input type="file" id="file" name="picture" accept="image/*" capture> -->
+            <input type="file" id="file" name="picture" accept="image/*">
             <label for="file" class="custom-file-upload button-animate">
                 Upload a Drawing <img src="/upload.svg" alt="Generated Image" style="padding-left: 8px;">
 
             </label>
             <!-- generate button -->
-            <button type="submit">Generate</button>
+            <div id="imagePreview"></div>
+
+            <button class="generate-button" type="submit">Generate</button>
+
         </form>
-        <div id="imagePreview"></div>
 
         <div id="imageDescription"></div>
 

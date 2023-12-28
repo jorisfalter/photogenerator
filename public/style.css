@@ -18,7 +18,12 @@ header h1 {
 }
 
 h2{
-    text-align:center
+    text-align:center;
+}
+
+h3{
+    text-align:center;
+    color:gray;
 }
 
 body {
@@ -118,22 +123,33 @@ footer {
     color:yellow;
 }
 
+.thumb {
+    /* height: 100px; You can set the size as you need */
+    width:350px;
+    border: 1px solid #000;
+    margin: 10px 5px 0 0;
+    border-radius:5px;
+    text-align:center;
+}
+
+.generate-button{
+    display:none;
+
+
+}
+
 @keyframes gradient-cycle {
     0%, 100% {
-      background: linear-gradient(to right, #999999, #eeeeee);
+      background: linear-gradient(to right, blue, yellow);
     }
     50% {
-      background: linear-gradient(to right, #eeeeee, #999999);
+      background: linear-gradient(to right, yellow, blue);
     }
   }
   
   .button-animate {
-    animation: gradient-cycle 3s ease infinite;
+    animation: gradient-cycle 5s ease infinite;
   }
 
-  .thumb {
-    height: 100px; /* You can set the size as you need */
-    border: 1px solid #000;
-    margin: 10px 5px 0 0;
-}
+
   

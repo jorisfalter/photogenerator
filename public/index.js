@@ -26,4 +26,7 @@ document.getElementById("file").addEventListener("change", function (event) {
 
   // Read in the image file as a data URL.
   reader.readAsDataURL(f);
+
+  var button = document.querySelector(".generate-button");
+  button.style.display = "block"; // Make the button take up space
 });

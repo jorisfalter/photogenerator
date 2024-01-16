@@ -54,8 +54,10 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const descriptionInput = response.choices[0].message.content;
     console.log(descriptionInput);
     const description =
-      "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: " +
-      descriptionInput;
+      // "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: " +
+      "I would like to create a photo realistic picture, suitable for children, based on following description: " +
+      descriptionInput +
+      " The result should be a photorealistic real picture";
 
     // ... logic to handle the description and generate an image ...
     const imageGenResponse = await openai.images.generate({

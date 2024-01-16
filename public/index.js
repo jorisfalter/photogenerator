@@ -30,3 +30,12 @@ document.getElementById("file").addEventListener("change", function (event) {
   var button = document.querySelector(".generate-button");
   button.style.display = "block"; // Make the button take up space
 });
+
+// do animation while waiting
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("uploadForm");
+  form.addEventListener("submit", function () {
+    // Show loading animation
+    document.getElementById("loadingAnimationId").style.display = "block";
+  });
+});

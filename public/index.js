@@ -1,6 +1,15 @@
 console.log("The JavaScript file is linked correctly!");
 
+// adjust padding after uploading a pic
+// Function to call after a picture is uploaded and processed
+function adjustMainPadding() {
+  document.querySelector("main").style.paddingTop = "200px"; // Adjust this value to the header's height
+  console.log("padding adjusted");
+}
+
 document.getElementById("file").addEventListener("change", function (event) {
+  adjustMainPadding();
+
   var imagePreview = document.getElementById("imagePreview");
   var files = event.target.files; // FileList object
   f = files[0];

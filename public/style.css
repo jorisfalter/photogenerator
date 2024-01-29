@@ -29,7 +29,7 @@ h3{
 /* this avoids the header and footer being fixed over the main */
 main{
     padding-bottom: 80px;
-    padding-top: 160px;
+    padding-top: 10px;
 }
 
 body {
@@ -112,7 +112,7 @@ footer {
     left: 0; /* Align to the left of the page */
     width: 100%; /* Ensure it stretches across the full width */
     background-color: #f8f8f8;
-    padding: 10px 20px;
+    padding: 2px 20px;
     text-align: center;
     z-index: 1000; /* Ensure it stays on top of other content */
     box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* Optional: adds shadow for depth */

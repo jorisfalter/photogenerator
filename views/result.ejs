@@ -3,22 +3,32 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Result</title>
+    <title>Drawings Become Real</title>
+    <link rel="stylesheet" href="../style.css">
 </head>
 
+
 <body>
-    <div class="result-page"></div>
+    <header>
+        <span>
+            <h1>Drawings Become Real</h1>
+        </span><span>Powered by Reggio Home</span>
+    </header>
+    <!-- <div class="result-page"></div> -->
     <h1>Here's your real-life picture, hope you like it!</h1>
-    <a href="/"><button>Download</button></a>
-    <a href="/"><button>Upload Another Image</button></a>
+    <div>
+        <img src="<%= image_url %>" alt="Generated Image" class="generated-image">
 
-
-
-    <img src="<%= image_url %>" alt="Generated Image" style="max-width: 100%;">
-    <p>
-        <%= description %>
-    </p>
     </div>
+    <div>
+        <a href="/"><button>Download</button></a>
+        <a href="/"><button>Upload Another Image</button></a>
+    </div>
+
+    </div>
+    <footer>
+        <p>Founded in the Netherlands, we respect your privacy by not storing your pictures</p>
+    </footer>
 </body>
 
 </html>

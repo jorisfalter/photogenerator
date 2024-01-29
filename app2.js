@@ -84,7 +84,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/test", (req, res) => {
-  res.render("result-test");
+  res.render("result");
 });
 
 // Start server

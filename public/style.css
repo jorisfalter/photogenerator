@@ -29,7 +29,7 @@ h3{
 /* this avoids the header and footer being fixed over the main */
 main{
     padding-bottom: 80px;
-    padding-top: 10px;
+    padding-top: 80px;
 }
 
 body {
@@ -131,17 +131,31 @@ footer {
 
 .thumb {
     /* height: 100px; You can set the size as you need */
-    width:350px;
+    max-height: 50vh;
+    width: auto;
+    max-width:350px;
     border: 1px solid #000;
-    margin: 10px 5px 0 0;
+    /* margin: 10px 5px 0 0; */
     border-radius:5px;
-    text-align:center;
+    margin-top:10px;
+    /* display:block; */
+}
+
+#imagePreview{
+    display: flex; /* Enables flexbox */
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+    /* height: 100px; /* Or any desired height */
+}
+
+#imagePreview span {
+    display: inline-flex; /* Allows the span to behave like a flex container */
+    justify-content: center; /* Centers content horizontally inside the span */
+    align-items: center; /* Centers content vertically inside the span */
 }
 
 .generate-button{
     display:none;
-
-
 }
 
 @keyframes gradient-cycle {
@@ -157,7 +171,17 @@ footer {
     animation: gradient-cycle 5s ease infinite;
   }
 
-
   .generated-image{
+    max-height: 50vh;
+    width: auto;
     max-width: 100%;
+    display:block;
+    margin-left: auto;
+    margin-right: auto; /* Center the image if it's smaller than its container */
   }
+
+  .result-buttons{
+    text-align:center;
+    margin:10px;
+  }
+

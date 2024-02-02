@@ -1,5 +1,3 @@
-console.log("The JavaScript file is linked correctly!");
-
 // adjust padding after uploading a pic
 // Function to call after a picture is uploaded and processed
 function adjustMainPadding() {

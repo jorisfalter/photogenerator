@@ -6,6 +6,7 @@ const FormData = require("form-data");
 const app = express();
 const OpenAI = require("openai");
 const path = require("path");
+const axios = require("axios"); // for audio
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
 
@@ -92,3 +93,56 @@ const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT i
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+//// for audiofiles
+// Function to convert speech to text
+async function convertSpeechToText(audioBuffer) {
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/audio/transcriptions",
+      {
+        audio: {
+          // Assuming the audio data is in base64 format
+          data: audioBuffer.toString("base64"),
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${openaiApiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data.choices[0].text;
+  } catch (error) {
+    console.error("Error converting speech to text:", error);
+    throw error;
+  }
+}
+
+// Function to generate an image from text
+async function generateImageFromText(textPrompt) {
+  try {
+    const response = await axios.post(
+      "https://api.openai.com/v1/images/generations",
+      {
+        prompt: textPrompt,
+        n: 1, // Number of images to generate
+        size: "1024x1024", // Image size
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${openaiApiKey}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data.data[0].url; // URL of the generated image
+  } catch (error) {
+    console.error("Error generating image from text:", error);
+    throw error;
+  }
+}
+//// end audiofiles

@@ -185,3 +185,14 @@ footer {
     margin:10px;
   }
 
+
+  /* recording */
+  #audioPlayback {
+    margin-top: 10px;
+}
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* end recording */

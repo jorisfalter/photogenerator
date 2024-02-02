@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
 let mediaRecorder;
 let audioChunks = [];
 
-// Access the user's microphone - OUT FOR NOW because otherwise it asks for microphone
+// // Access the user's microphone - OUT FOR NOW because otherwise it asks for microphone
 // navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
 //   mediaRecorder = new MediaRecorder(stream);
 //   mediaRecorder.ondataavailable = (event) => {
@@ -96,13 +96,21 @@ document.getElementById("uploadRecord").addEventListener("click", () => {
   const formData = new FormData();
   formData.append("audioFile", audioBlob, "recording.wav");
 
-  // Adjust the URL to your server's endpoint
-  fetch("YOUR_SERVER_ENDPOINT", {
+  // Adjust this URL to match your server's endpoint
+  fetch("/upload-audio", {
     method: "POST",
     body: formData,
   })
     .then((response) => response.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      console.log(data);
+      // Handle the transcribed text here
+      if (data.success) {
+        alert(`Transcribed Text: ${data.text}`);
+        // You can now use data.text as input for image generation or other purposes
+      }
+    })
     .catch((error) => console.error("Error:", error));
 });
+
 //// end recording

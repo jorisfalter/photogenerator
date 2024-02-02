@@ -108,7 +108,7 @@ async function convertSpeechToText(audioBuffer) {
       },
       {
         headers: {
-          Authorization: `Bearer ${openaiApiKey}`,
+          Authorization: `Bearer ${openAiApiKey}`,
           "Content-Type": "application/json",
         },
       }
@@ -133,7 +133,7 @@ async function generateImageFromText(textPrompt) {
       },
       {
         headers: {
-          Authorization: `Bearer ${openaiApiKey}`,
+          Authorization: `Bearer ${openAiApiKey}`,
           "Content-Type": "application/json",
         },
       }
@@ -146,3 +146,20 @@ async function generateImageFromText(textPrompt) {
   }
 }
 //// end audiofiles
+
+//// audio endpoint
+app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+
+  try {
+    // Assuming convertSpeechToText function is defined and returns the transcribed text
+    const text = await convertSpeechToText(req.file.buffer);
+    // Optionally, further process the text or directly send it back
+    res.json({ success: true, text: text });
+  } catch (error) {
+    console.error("Error processing audio file:", error);
+    res.status(500).send("Error processing audio file.");
+  }
+});

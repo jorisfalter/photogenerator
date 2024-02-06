@@ -170,7 +170,7 @@ app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
     const textObject = await convertSpeechToText(req.file.buffer, "aFileName");
     const text = textObject.text;
     const image_url = await generateImageFromText(text);
-    console.log(image_url);
+    console.log("we will now render the image");
     // Optionally, further process the text or directly send it back
     // res.json({ success: true, audioInput: text, imageUrl: image_url });
     res.render("result", {

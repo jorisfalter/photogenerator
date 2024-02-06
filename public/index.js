@@ -51,22 +51,22 @@ document.addEventListener("DOMContentLoaded", function () {
 let mediaRecorder;
 let audioChunks = [];
 
-// // Access the user's microphone - OUT FOR NOW because otherwise it asks for microphone
-// navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-//   mediaRecorder = new MediaRecorder(stream);
-//   mediaRecorder.ondataavailable = (event) => {
-//     audioChunks.push(event.data);
-//   };
-//   mediaRecorder.onstop = () => {
-//     const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-//     const audioUrl = URL.createObjectURL(audioBlob);
-//     const audio = document.getElementById("audioPlayback");
-//     audio.src = audioUrl;
-//     audio.hidden = false;
-//     document.getElementById("resetRecord").disabled = false;
-//     document.getElementById("uploadRecord").disabled = false;
-//   };
-// });
+// Access the user's microphone - OUT FOR NOW because otherwise it asks for microphone
+navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+  mediaRecorder = new MediaRecorder(stream);
+  mediaRecorder.ondataavailable = (event) => {
+    audioChunks.push(event.data);
+  };
+  mediaRecorder.onstop = () => {
+    const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = document.getElementById("audioPlayback");
+    audio.src = audioUrl;
+    audio.hidden = false;
+    document.getElementById("resetRecord").disabled = false;
+    document.getElementById("uploadRecord").disabled = false;
+  };
+});
 
 // Start recording
 document.getElementById("startRecord").addEventListener("click", () => {
@@ -96,7 +96,7 @@ document.getElementById("uploadRecord").addEventListener("click", () => {
   const formData = new FormData();
   formData.append("audioFile", audioBlob, "recording.wav");
 
-  // Adjust this URL to match your server's endpoint
+  // call the endpoint
   fetch("/upload-audio", {
     method: "POST",
     body: formData,

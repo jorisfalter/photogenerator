@@ -7,6 +7,7 @@ const app = express();
 const OpenAI = require("openai");
 const path = require("path");
 const axios = require("axios"); // for audio
+const fs = require("fs");
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
 
@@ -96,50 +97,61 @@ app.listen(PORT, () => {
 
 //// for audiofiles
 // Function to convert speech to text
-async function convertSpeechToText(audioBuffer) {
+async function convertSpeechToText(audioBuffer, fileName) {
+  const formData = new FormData();
+  // Append the buffer directly, specifying filename and content type
+  formData.append("file", audioBuffer, {
+    filename: fileName,
+    contentType: "audio/mpeg",
+  });
+  formData.append("model", "whisper-1"); // Make sure this model name is up to date
+
   try {
     const response = await axios.post(
       "https://api.openai.com/v1/audio/transcriptions",
-      {
-        audio: {
-          // Assuming the audio data is in base64 format
-          data: audioBuffer.toString("base64"),
-        },
-      },
+      formData,
       {
         headers: {
+          ...formData.getHeaders(),
           Authorization: `Bearer ${openAiApiKey}`,
-          "Content-Type": "application/json",
         },
       }
     );
-
-    return response.data.choices[0].text;
+    console.log(response.data);
+    return response.data;
   } catch (error) {
-    console.error("Error converting speech to text:", error);
-    throw error;
+    if (error.response) {
+      console.log("axios foutje");
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx
+      console.error(error.response.data);
+      console.error(error.response.status);
+      console.error(error.response.headers);
+    } else if (error.request) {
+      // The request was made but no response was received
+      console.error(error.request);
+    } else {
+      // Something happened in setting up the request that triggered an Error
+      console.error("Error", error.message);
+    }
+    console.error(error.config);
   }
 }
 
 // Function to generate an image from text
 async function generateImageFromText(textPrompt) {
   try {
-    const response = await axios.post(
-      "https://api.openai.com/v1/images/generations",
-      {
-        prompt: textPrompt,
-        n: 1, // Number of images to generate
-        size: "1024x1024", // Image size
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${openAiApiKey}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return response.data.data[0].url; // URL of the generated image
+    // ... logic to handle the description and generate an image ...
+    const imageGenResponse = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: textPrompt,
+      n: 1,
+      size: "1024x1024",
+    });
+    image_url = imageGenResponse.data[0].url;
+    image_revised_prompt = imageGenResponse.data[0].revised_prompt;
+    console.log(image_url);
+    return image_url;
   } catch (error) {
     console.error("Error generating image from text:", error);
     throw error;
@@ -155,9 +167,16 @@ app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
 
   try {
     // Assuming convertSpeechToText function is defined and returns the transcribed text
-    const text = await convertSpeechToText(req.file.buffer);
+    const textObject = await convertSpeechToText(req.file.buffer, "aFileName");
+    const text = textObject.text;
+    const image_url = await generateImageFromText(text);
+    console.log(image_url);
     // Optionally, further process the text or directly send it back
-    res.json({ success: true, text: text });
+    // res.json({ success: true, audioInput: text, imageUrl: image_url });
+    res.render("result", {
+      image_url: image_url,
+      description: "dit komt later",
+    });
   } catch (error) {
     console.error("Error processing audio file:", error);
     res.status(500).send("Error processing audio file.");

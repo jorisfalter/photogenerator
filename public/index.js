@@ -106,7 +106,17 @@ document.getElementById("uploadRecord").addEventListener("click", () => {
       console.log(data);
       // Handle the transcribed text here
       if (data.success) {
-        alert(`Transcribed Text: ${data.text}`);
+        alert(`Transcribed Text: ${data.description}`);
+        // Construct a URL with query parameters
+        const queryParams = `image_url=${encodeURIComponent(
+          data.image_url
+        )}&description=${encodeURIComponent(data.description)}`;
+        window.location.href = `/result?${queryParams}`; // Redirect
+
+        // window.location.href = `/result?image_url=${encodeURIComponent(
+        //   data.image_url
+        // )}&description=${encodeURIComponent(data.image_url)}`;
+
         // You can now use data.text as input for image generation or other purposes
       }
     })

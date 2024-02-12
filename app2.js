@@ -173,12 +173,26 @@ app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
     console.log("we will now render the image");
     // Optionally, further process the text or directly send it back
     // res.json({ success: true, audioInput: text, imageUrl: image_url });
-    res.render("result", {
+    // res.render("result", {
+    //   image_url: image_url,
+    //   description: "dit komt later",
+    // });
+    res.json({
+      success: true,
       image_url: image_url,
-      description: "dit komt later",
+      description: text,
     });
   } catch (error) {
     console.error("Error processing audio file:", error);
     res.status(500).send("Error processing audio file.");
   }
+});
+
+app.get("/result", (req, res) => {
+  // Extract query parameters
+  const { image_url, description } = req.query;
+  res.render("result", {
+    image_url: image_url,
+    description: description,
+  });
 });

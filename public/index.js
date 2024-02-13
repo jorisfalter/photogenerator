@@ -160,17 +160,21 @@ document.getElementById("stopRecord").addEventListener("click", () => {
       document.getElementById("audioPlayback").hidden = false;
       document.getElementById("resetRecord").disabled = false;
       document.getElementById("uploadRecord").disabled = false;
-
-      // To reset the recorder for the next recording
-      // recorder.reset();
-      // audioStream.getTracks().forEach((track) => track.stop()); // Optional: Stop the audio stream
-
-      // The rest of your code for handling the recorded audio
     });
 
     document.getElementById("startRecord").disabled = true;
     document.getElementById("stopRecord").disabled = true;
   }
+});
+
+// Reset recording
+document.getElementById("resetRecord").addEventListener("click", () => {
+  recorder.reset();
+  // audioStream.getTracks().forEach((track) => track.stop()); // Optional: Stop the audio stream
+  document.getElementById("startRecord").disabled = false;
+  document.getElementById("audioPlayback").hidden = true;
+  document.getElementById("resetRecord").disabled = true;
+  document.getElementById("uploadRecord").disabled = true;
 });
 
 // Assuming recorder is your RecordRTC instance

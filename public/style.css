@@ -53,6 +53,7 @@ form {
     flex-direction: column;
     /* gap: 10px; */
     width:350px;
+    /* margin:10px 0; */
 }
 
 .homepage-container{
@@ -62,8 +63,20 @@ form {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 10px;
     width:390px;
+    text-align:center;
+}
+
+.audio-container{
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width:350px;
+    /* margin:10px 0; */
+    text-align:center;
 }
 
 .custom-file-upload {
@@ -112,6 +125,7 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    margin:5px;
 }
 
 button:hover {

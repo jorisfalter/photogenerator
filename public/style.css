@@ -215,6 +215,7 @@ footer {
   /* recording */
   #audioPlayback {
     margin-top: 10px;
+    margin:auto;
 }
 button:disabled {
     opacity: 0.5;

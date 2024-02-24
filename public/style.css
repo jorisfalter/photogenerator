@@ -17,6 +17,30 @@ header h1 {
     text-align: left;
 }
 
+
+.header-content {
+  display: flex;
+  align-items: center; /* Aligns the image and text vertically */
+}
+
+.header-logo {
+  max-height: 50px; /* Or the width you want your logo to be */
+  margin-right: 20px; /* Adds some space between the logo and the text */
+}
+
+header h1 {
+  font-size: 24px; /* Or the size you prefer */
+  margin: 0;
+  line-height: 1.2; /* Adjusts the spacing between header lines */
+}
+
+header p {
+  font-size: 16px; /* Or the size you prefer */
+  margin: 0;
+}
+
+
+
 h2{
     text-align:center;
 }
@@ -185,7 +209,7 @@ footer {
     display:none;
 }
 
-@keyframes gradient-cycle {
+/* @keyframes gradient-cycle {
     0%, 100% {
       background: linear-gradient(to right, blue, yellow);
     }
@@ -196,7 +220,7 @@ footer {
   
   .button-animate {
     animation: gradient-cycle 5s ease infinite;
-  }
+  } */
 
   .generated-image{
     max-height: 50vh;

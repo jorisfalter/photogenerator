@@ -11,9 +11,21 @@
 
 <body>
     <header>
-        <span>
+        <header>
+            <div class="header-content">
+                <img src="ReggioHomeLogoBlackWhite.png" alt="Logo" class="header-logo">
+                <div>
+                    <h1>Drawings become real</h1>
+                    <p>Powered by Reggio Home</p>
+                </div>
+            </div>
+        </header>
+
+
+        <!-- <span>
             <h1>Drawings Become Real</h1>
-        </span><span>Powered by Reggio Home</span>
+        </span>
+        <span>Powered by Reggio Home</span> -->
     </header>
     <main>
         <div class="homepage-container">
@@ -28,9 +40,7 @@
                 <!-- <input type="file" id="file" name="picture" accept="image/*" capture> -->
                 <input type="file" id="file" name="picture" accept="image/*">
                 <label for="file" class="custom-file-upload button-animate">
-                    <img src="/camera.svg" alt="Camera Image" style="padding-right: 8px;"> Upload a Drawing <img
-                        src="/upload.svg" alt="Upload Image" style="padding-left: 8px;">
-
+                    <img src="/camera.svg" alt="Camera Image" style="padding-right: 8px;">
                 </label>
                 <!-- generate button -->
                 <div id="imagePreview"></div>
@@ -52,10 +62,16 @@
                 <button id="resetRecord" disabled>Reset Recording</button>
                 <button id="uploadRecord" disabled>Upload Recording</button>
             </div>
+
         </div>
+        <!-- <div>
+            <p>Founded in the Netherlands, we respect your privacy by not storing your pictures</p>
+        </div> -->
+
     </main>
     <footer>
-        <p>Founded in the Netherlands, we respect your privacy by not storing your pictures</p>
+        <p>© 2024 Reggio Home - Since 2023 your go-to source for Reggio Emilia inspired learning!
+        </p>
     </footer>
 </body>
 <script src="https://unpkg.com/recordrtc"></script>

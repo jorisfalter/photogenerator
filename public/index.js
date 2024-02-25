@@ -212,3 +212,9 @@ document.getElementById("uploadRecord").addEventListener("click", () => {
 initRecording();
 
 //// end recording
+
+// auto copyright update
+document.addEventListener("DOMContentLoaded", function () {
+  var currentYear = new Date().getFullYear();
+  document.getElementById("current-year").textContent = currentYear;
+});

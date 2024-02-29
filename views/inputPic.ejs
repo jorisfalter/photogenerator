@@ -11,21 +11,23 @@
 
 
 <body>
-    <header>
-        <span>
-            <h1>Drawings Become Real</h1>
-        </span><span>Powered by Reggio Home</span>
-    </header>
-    <!-- <div class="result-page"></div> -->
-    <main>
-        <h1>Here's your real-life picture, hope you like it!</h1>
-        <div>
-            <img src="<%= image_url %>" alt="Generated Image" class="generated-image">
 
+    <header>
+        <div class="header-content" onclick="redirectToHome()">
+            <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
+            <div class="header-text">
+                <h1>Drawings become real</h1>
+                <p>Powered by Reggio Home</p>
+            </div>
         </div>
-        <div class="result-buttons">
-            <a href="/"><button>Download</button></a>
-            <a href="/"><button>Upload Another Image</button></a>
+    </header>
+    <main>
+        <div class="homepage-container">
+
+            <div>
+                <h2>Free Image Generator </h2>
+                <h3>Make Your Children's Ideas Become Real</h3>
+            </div>
         </div>
     </main>
     <footer>
@@ -35,5 +37,7 @@
             Emilia inspired learning!</p>
     </footer>
 </body>
+
+<script src="index.js"></script>
 
 </html>

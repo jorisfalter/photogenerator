@@ -11,23 +11,21 @@
 
 <body>
     <header>
-        <header>
-            <div class="header-content">
-                <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
-                <div>
-                    <h1>Drawings become real</h1>
-                    <p>Powered by Reggio Home</p>
-                </div>
+        <div class="header-content" onclick="redirectToHome()">
+            <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
+
+            <div class="header-text">
+                <h1>Drawings become real</h1>
+                <p>Powered by Reggio Home</p>
             </div>
-        </header>
-
-
-        <!-- <span>
-            <h1>Drawings Become Real</h1>
-        </span>
-        <span>Powered by Reggio Home</span> -->
+        </div>
     </header>
+
+
+
     <main>
+        <a href="/inputPic" class="input-selection-button">Image Input</a>
+
         <div class="homepage-container">
             <div>
                 <h2>Free Image Generator </h2>
@@ -53,7 +51,7 @@
             </div>
 
             <!-- what does this do again? -->
-            <div id="imageDescription"></div>
+            <!-- <div id="imageDescription"></div> -->
             <h3>Or</h3>
             <div class="audio-container">
                 <button id="startRecord">Start Recording</button>
@@ -65,12 +63,13 @@
 
         </div>
         <!-- <div>
-            <p>Founded in the Netherlands, we respect your privacy by not storing your pictures</p>
         </div> -->
 
     </main>
 
     <footer>
+        <p>Founded in the Netherlands, we respect your privacy by not storing your pictures</p>
+
         <p id="footer-text">© <span id="current-year"></span> Reggio Home - Since 2023 your go-to source for Reggio
             Emilia inspired learning!</p>
     </footer>

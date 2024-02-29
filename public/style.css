@@ -21,7 +21,17 @@ header h1 {
 .header-content {
   display: flex;
   align-items: center; /* Aligns the image and text vertically */
+  text-decoration:none;
 }
+
+.header-text:hover{
+    color:darkgray;
+}
+
+.header-text:hover h1 {
+    color: darkgray;
+}
+
 
 .header-logo {
   max-height: 50px; /* Or the width you want your logo to be */
@@ -249,3 +259,17 @@ button:disabled {
 }
 
 /* end recording */
+
+
+.input-selection-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

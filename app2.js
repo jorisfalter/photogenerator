@@ -196,3 +196,7 @@ app.get("/result", (req, res) => {
     description: description,
   });
 });
+
+app.get("/inputPic", (req, res) => {
+  res.render("inputPic");
+});

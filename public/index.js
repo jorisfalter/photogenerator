@@ -47,6 +47,38 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+const observer = new MutationObserver(function (mutations) {
+  mutations.forEach(function (mutation) {
+    if (mutation.attributeName === "style") {
+      let displayStyle = mutation.target.style.display;
+      if (displayStyle === "block") {
+        startCountdown();
+      }
+    }
+  });
+});
+
+observer.observe(document.getElementById("loadingAnimationId"), {
+  attributes: true, //configure it to listen to attribute changes
+});
+
+function startCountdown() {
+  let countdownElement = document.getElementById("countdown");
+  let countdownTime = parseInt(countdownElement.textContent, 10);
+
+  let timer = setInterval(() => {
+    countdownTime--;
+    countdownElement.textContent = countdownTime;
+
+    if (countdownTime <= 0) {
+      clearInterval(timer);
+      document.getElementById("loadingAnimationId").textContent =
+        "Done thinking!";
+      observer.disconnect(); // Stop observing when countdown finishes
+    }
+  }, 1000);
+}
+
 // //// recording
 // let mediaRecorder;
 // let audioChunks = [];

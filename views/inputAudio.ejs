@@ -28,6 +28,13 @@
                 <h2>Free Image Generator </h2>
                 <h3>Make Your Children's Ideas Become Real</h3>
             </div>
+            <div class="audio-container">
+                <button id="startRecord">Start Recording</button>
+                <button id="stopRecord" disabled>Stop Recording</button>
+                <audio id="audioPlayback" controls hidden></audio>
+                <button id="resetRecord" disabled>Reset Recording</button>
+                <button id="uploadRecord" disabled>Upload Recording</button>
+            </div>
         </div>
     </main>
     <footer>
@@ -37,6 +44,7 @@
             Emilia inspired learning!</p>
     </footer>
 </body>
+<script src="https://unpkg.com/recordrtc"></script>
 
 <script src="index.js"></script>
 

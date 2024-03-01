@@ -200,3 +200,7 @@ app.get("/result", (req, res) => {
 app.get("/inputPic", (req, res) => {
   res.render("inputPic");
 });
+
+app.get("/inputAudio", (req, res) => {
+  res.render("inputAudio");
+});

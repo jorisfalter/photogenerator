@@ -5,175 +5,182 @@ function adjustMainPadding() {
   console.log("padding adjusted");
 }
 
-document.getElementById("file").addEventListener("change", function (event) {
-  adjustMainPadding();
+// pic upload
+const picElement = document.getElementById("file");
+if (picElement) {
+  document.getElementById("file").addEventListener("change", function (event) {
+    adjustMainPadding();
 
-  var imagePreview = document.getElementById("imagePreview");
-  var files = event.target.files; // FileList object
-  f = files[0];
-  console.log(files[0]);
+    var imagePreview = document.getElementById("imagePreview");
+    var files = event.target.files; // FileList object
+    f = files[0];
+    console.log(files[0]);
 
-  var reader = new FileReader();
+    var reader = new FileReader();
 
-  // Closure to capture the file information.
-  reader.onload = (function (theFile) {
-    return function (e) {
-      // Render thumbnail.
-      var span = document.createElement("span");
-      span.innerHTML = [
-        '<img class="thumb" src="',
-        e.target.result,
-        '" title="',
-        escape(theFile.name),
-        '"/>',
-      ].join("");
-      imagePreview.insertBefore(span, null);
-    };
-  })(f);
+    // Closure to capture the file information.
+    reader.onload = (function (theFile) {
+      return function (e) {
+        // Render thumbnail.
+        var span = document.createElement("span");
+        span.innerHTML = [
+          '<img class="thumb" src="',
+          e.target.result,
+          '" title="',
+          escape(theFile.name),
+          '"/>',
+        ].join("");
+        imagePreview.insertBefore(span, null);
+      };
+    })(f);
 
-  // Read in the image file as a data URL.
-  reader.readAsDataURL(f);
+    // Read in the image file as a data URL.
+    reader.readAsDataURL(f);
 
-  var button = document.querySelector(".generate-button");
-  button.style.display = "block"; // Make the button take up space
-});
-
-// do animation while waiting
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("uploadForm");
-  form.addEventListener("submit", function () {
-    // Show loading animation
-    document.getElementById("loadingAnimationId").style.display = "block";
+    var button = document.querySelector(".generate-button");
+    button.style.display = "block"; // Make the button take up space
   });
-});
 
-const observer = new MutationObserver(function (mutations) {
-  mutations.forEach(function (mutation) {
-    if (mutation.attributeName === "style") {
-      let displayStyle = mutation.target.style.display;
-      if (displayStyle === "block") {
-        startCountdown();
-      }
-    }
+  // do animation while waiting
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("uploadForm");
+    form.addEventListener("submit", function () {
+      // Show loading animation
+      document.getElementById("loadingAnimationId").style.display = "block";
+    });
   });
-});
 
-observer.observe(document.getElementById("loadingAnimationId"), {
-  attributes: true, //configure it to listen to attribute changes
-});
-
-function startCountdown() {
-  let countdownElement = document.getElementById("countdown");
-  let countdownTime = parseInt(countdownElement.textContent, 10);
-
-  let timer = setInterval(() => {
-    countdownTime--;
-    countdownElement.textContent = countdownTime;
-
-    if (countdownTime <= 0) {
-      clearInterval(timer);
-      document.getElementById("loadingAnimationId").textContent =
-        "Done thinking!";
-      observer.disconnect(); // Stop observing when countdown finishes
-    }
-  }, 1000);
-}
-
-//// new recording script because ios cannot handle mediarecorder
-let recorder;
-let audioStream;
-
-// Function to initialize recording
-function initRecording() {
-  navigator.mediaDevices
-    .getUserMedia({ audio: true })
-    .then((stream) => {
-      audioStream = stream;
-      // Create a new instance of RecordRTC with the audio stream
-      recorder = RecordRTC(stream, {
-        type: "audio",
-        mimeType: "audio/wav", // Specify desired output format
-        recorderType: RecordRTC.StereoAudioRecorder, // For broader compatibility
-        numberOfAudioChannels: 1, // Mono audio
-        desiredSampRate: 16000, // Optional: Specify sample rate
-      });
-    })
-    .catch((error) => {
-      console.error("Error accessing the microphone:", error);
-    });
-}
-
-document.getElementById("startRecord").addEventListener("click", () => {
-  if (recorder) {
-    recorder.startRecording();
-    document.getElementById("startRecord").disabled = true;
-    document.getElementById("stopRecord").disabled = false;
-  } else {
-    console.log("Recorder not initialized");
-  }
-});
-
-document.getElementById("stopRecord").addEventListener("click", () => {
-  if (recorder) {
-    recorder.stopRecording(() => {
-      let blob = recorder.getBlob();
-      let audioUrl = URL.createObjectURL(blob);
-      document.getElementById("audioPlayback").src = audioUrl;
-      document.getElementById("audioPlayback").hidden = false;
-      document.getElementById("resetRecord").disabled = false;
-      document.getElementById("uploadRecord").disabled = false;
-    });
-
-    document.getElementById("startRecord").disabled = true;
-    document.getElementById("stopRecord").disabled = true;
-  }
-});
-
-// Reset recording
-document.getElementById("resetRecord").addEventListener("click", () => {
-  recorder.reset();
-  // audioStream.getTracks().forEach((track) => track.stop()); // Optional: Stop the audio stream
-  document.getElementById("startRecord").disabled = false;
-  document.getElementById("audioPlayback").hidden = true;
-  document.getElementById("resetRecord").disabled = true;
-  document.getElementById("uploadRecord").disabled = true;
-});
-
-// Assuming recorder is your RecordRTC instance
-document.getElementById("uploadRecord").addEventListener("click", () => {
-  if (recorder && recorder.getBlob()) {
-    const audioBlob = recorder.getBlob(); // Get the recorded blob directly from RecordRTC
-    const formData = new FormData();
-    formData.append("audioFile", audioBlob, "recording.wav"); // Append the blob to FormData
-
-    // Call the endpoint
-    fetch("/upload-audio", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // Handle the response here
-        if (data.success) {
-          alert(`Transcribed Text: ${data.description}`);
-          // Construct a URL with query parameters
-          const queryParams = `image_url=${encodeURIComponent(
-            data.image_url
-          )}&description=${encodeURIComponent(data.description)}`;
-          window.location.href = `/result?${queryParams}`; // Redirect
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      if (mutation.attributeName === "style") {
+        let displayStyle = mutation.target.style.display;
+        if (displayStyle === "block") {
+          startCountdown();
         }
-      })
-      .catch((error) => console.error("Error:", error));
-  } else {
-    console.log("Recorder not initialized or recording not stopped.");
+      }
+    });
+  });
+
+  observer.observe(document.getElementById("loadingAnimationId"), {
+    attributes: true, //configure it to listen to attribute changes
+  });
+
+  function startCountdown() {
+    let countdownElement = document.getElementById("countdown");
+    let countdownTime = parseInt(countdownElement.textContent, 10);
+
+    let timer = setInterval(() => {
+      countdownTime--;
+      countdownElement.textContent = countdownTime;
+
+      if (countdownTime <= 0) {
+        clearInterval(timer);
+        document.getElementById("loadingAnimationId").textContent =
+          "Done thinking!";
+        observer.disconnect(); // Stop observing when countdown finishes
+      }
+    }, 1000);
   }
-});
+}
 
-// Call initRecording to set up
-initRecording();
+const audioElement = document.getElementById("startRecord");
+if (audioElement) {
+  //// new recording script because ios cannot handle mediarecorder
+  let recorder;
+  let audioStream;
 
-//// end recording
+  // Function to initialize recording
+  function initRecording() {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        audioStream = stream;
+        // Create a new instance of RecordRTC with the audio stream
+        recorder = RecordRTC(stream, {
+          type: "audio",
+          mimeType: "audio/wav", // Specify desired output format
+          recorderType: RecordRTC.StereoAudioRecorder, // For broader compatibility
+          numberOfAudioChannels: 1, // Mono audio
+          desiredSampRate: 16000, // Optional: Specify sample rate
+        });
+      })
+      .catch((error) => {
+        console.error("Error accessing the microphone:", error);
+      });
+  }
+
+  document.getElementById("startRecord").addEventListener("click", () => {
+    if (recorder) {
+      recorder.startRecording();
+      document.getElementById("startRecord").disabled = true;
+      document.getElementById("stopRecord").disabled = false;
+    } else {
+      console.log("Recorder not initialized");
+    }
+  });
+
+  document.getElementById("stopRecord").addEventListener("click", () => {
+    if (recorder) {
+      recorder.stopRecording(() => {
+        let blob = recorder.getBlob();
+        let audioUrl = URL.createObjectURL(blob);
+        document.getElementById("audioPlayback").src = audioUrl;
+        document.getElementById("audioPlayback").hidden = false;
+        document.getElementById("resetRecord").disabled = false;
+        document.getElementById("uploadRecord").disabled = false;
+      });
+
+      document.getElementById("startRecord").disabled = true;
+      document.getElementById("stopRecord").disabled = true;
+    }
+  });
+
+  // Reset recording
+  document.getElementById("resetRecord").addEventListener("click", () => {
+    recorder.reset();
+    // audioStream.getTracks().forEach((track) => track.stop()); // Optional: Stop the audio stream
+    document.getElementById("startRecord").disabled = false;
+    document.getElementById("audioPlayback").hidden = true;
+    document.getElementById("resetRecord").disabled = true;
+    document.getElementById("uploadRecord").disabled = true;
+  });
+
+  // Assuming recorder is your RecordRTC instance
+  document.getElementById("uploadRecord").addEventListener("click", () => {
+    if (recorder && recorder.getBlob()) {
+      const audioBlob = recorder.getBlob(); // Get the recorded blob directly from RecordRTC
+      const formData = new FormData();
+      formData.append("audioFile", audioBlob, "recording.wav"); // Append the blob to FormData
+
+      // Call the endpoint
+      fetch("/upload-audio", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          // Handle the response here
+          if (data.success) {
+            alert(`Transcribed Text: ${data.description}`);
+            // Construct a URL with query parameters
+            const queryParams = `image_url=${encodeURIComponent(
+              data.image_url
+            )}&description=${encodeURIComponent(data.description)}`;
+            window.location.href = `/result?${queryParams}`; // Redirect
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    } else {
+      console.log("Recorder not initialized or recording not stopped.");
+    }
+  });
+
+  // Call initRecording to set up
+  initRecording();
+
+  //// end recording
+}
 
 // auto copyright update
 document.addEventListener("DOMContentLoaded", function () {

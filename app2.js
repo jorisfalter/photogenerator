@@ -82,7 +82,8 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
 
 // Root route to serve the index.html file
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  // res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.render("index");
 });
 
 app.get("/test", (req, res) => {

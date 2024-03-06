@@ -262,7 +262,7 @@ button:disabled {
 
 
 .input-selection-button {
-    display: inline-block;
+    /* display: inline-block; */
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -271,5 +271,9 @@ button:disabled {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    height:100px;
+    width:100px;
+    margin-left:20px;
+    margin-right:20px;
   }
   

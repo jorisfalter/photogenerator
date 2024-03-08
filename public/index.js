@@ -112,8 +112,8 @@ if (audioElement) {
   document.getElementById("startRecord").addEventListener("click", () => {
     if (recorder) {
       recorder.startRecording();
-      document.getElementById("startRecord").disabled = true;
-      document.getElementById("stopRecord").disabled = false;
+      document.getElementById("startRecord").style.display = "none";
+      document.getElementById("stopRecord").style.display = "inline-block";
     } else {
       console.log("Recorder not initialized");
     }
@@ -126,12 +126,14 @@ if (audioElement) {
         let audioUrl = URL.createObjectURL(blob);
         document.getElementById("audioPlayback").src = audioUrl;
         document.getElementById("audioPlayback").hidden = false;
-        document.getElementById("resetRecord").disabled = false;
-        document.getElementById("uploadRecord").disabled = false;
+        document.getElementById("resetRecord").style.display = "inline-block";
+        document.getElementById("uploadRecord").style.display = "inline-block";
       });
 
-      document.getElementById("startRecord").disabled = true;
-      document.getElementById("stopRecord").disabled = true;
+      // document.getElementById("startRecord").disabled = true;
+      // document.getElementById("stopRecord").disabled = true;
+      document.getElementById("startRecord").style.display = "none";
+      document.getElementById("stopRecord").style.display = "none";
     }
   });
 
@@ -139,10 +141,10 @@ if (audioElement) {
   document.getElementById("resetRecord").addEventListener("click", () => {
     recorder.reset();
     // audioStream.getTracks().forEach((track) => track.stop()); // Optional: Stop the audio stream
-    document.getElementById("startRecord").disabled = false;
-    document.getElementById("audioPlayback").hidden = true;
-    document.getElementById("resetRecord").disabled = true;
-    document.getElementById("uploadRecord").disabled = true;
+    document.getElementById("startRecord").style.display = "inline-block";
+    document.getElementById("audioPlayback").style.display = "none";
+    document.getElementById("resetRecord").style.display = "none";
+    document.getElementById("uploadRecord").style.display = "none";
   });
 
   // Assuming recorder is your RecordRTC instance

@@ -64,23 +64,6 @@ if (picElement) {
   observer.observe(document.getElementById("loadingAnimationId"), {
     attributes: true, //configure it to listen to attribute changes
   });
-
-  function startCountdown() {
-    let countdownElement = document.getElementById("countdown");
-    let countdownTime = parseInt(countdownElement.textContent, 10);
-
-    let timer = setInterval(() => {
-      countdownTime--;
-      countdownElement.textContent = countdownTime;
-
-      if (countdownTime <= 0) {
-        clearInterval(timer);
-        document.getElementById("loadingAnimationId").textContent =
-          "Done thinking!";
-        observer.disconnect(); // Stop observing when countdown finishes
-      }
-    }, 1000);
-  }
 }
 
 const audioElement = document.getElementById("startRecord");
@@ -150,6 +133,9 @@ if (audioElement) {
   // Assuming recorder is your RecordRTC instance
   document.getElementById("uploadRecord").addEventListener("click", () => {
     if (recorder && recorder.getBlob()) {
+      startCountdown();
+      document.getElementById("loadingAnimationId").style.display = "block";
+
       const audioBlob = recorder.getBlob(); // Get the recorded blob directly from RecordRTC
       const formData = new FormData();
       formData.append("audioFile", audioBlob, "recording.wav"); // Append the blob to FormData
@@ -182,6 +168,24 @@ if (audioElement) {
   initRecording();
 
   //// end recording
+}
+
+// countdown
+function startCountdown() {
+  let countdownElement = document.getElementById("countdown");
+  let countdownTime = parseInt(countdownElement.textContent, 10);
+
+  let timer = setInterval(() => {
+    countdownTime--;
+    countdownElement.textContent = countdownTime;
+
+    if (countdownTime <= 0) {
+      clearInterval(timer);
+      document.getElementById("loadingAnimationId").textContent =
+        "Done thinking!";
+      observer.disconnect(); // Stop observing when countdown finishes
+    }
+  }, 1000);
 }
 
 // auto copyright update

@@ -12,11 +12,15 @@
 
 <body>
     <header>
-        <span>
-            <h1>Drawings Become Real</h1>
-        </span><span>Powered by Reggio Home</span>
+        <div class="header-content" onclick="redirectToHome()">
+            <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
+
+            <div class="header-text">
+                <h1>Drawings become real</h1>
+                <p>Powered by Reggio Home</p>
+            </div>
+        </div>
     </header>
-    <!-- <div class="result-page"></div> -->
     <main>
         <h1>Here's your real-life picture, hope you like it!</h1>
         <div>
@@ -29,11 +33,14 @@
         </div>
     </main>
     <footer>
-        <p>Founded in the Netherlands, we respect your privacy by not storing your pictures</p>
+        <p>Founded in the Netherlands, we respect your privacy by not storing your drawings or audio</p>
 
         <p id="footer-text">© <span id="current-year"></span> Reggio Home - Since 2023 your go-to source for Reggio
             Emilia inspired learning!</p>
     </footer>
 </body>
+
+<script src="index.js"></script>
+
 
 </html>

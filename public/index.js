@@ -66,39 +66,57 @@ if (picElement) {
   });
 }
 
+// recording
 const audioElement = document.getElementById("startRecord");
+let recorder;
+let audioStream;
 if (audioElement) {
   //// new recording script because ios cannot handle mediarecorder
-  let recorder;
-  let audioStream;
 
   // Function to initialize recording
-  function initRecording() {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true })
-      .then((stream) => {
-        audioStream = stream;
-        // Create a new instance of RecordRTC with the audio stream
-        recorder = RecordRTC(stream, {
-          type: "audio",
-          mimeType: "audio/wav", // Specify desired output format
-          recorderType: RecordRTC.StereoAudioRecorder, // For broader compatibility
-          numberOfAudioChannels: 1, // Mono audio
-          desiredSampRate: 16000, // Optional: Specify sample rate
-        });
-      })
-      .catch((error) => {
-        console.error("Error accessing the microphone:", error);
+  console.log("initialising recording");
+  // document.getElementById("startRecord").disabled = true; // Disable at start
+
+  async function initRecording() {
+    console.log("initialising recording");
+
+    try {
+      console.log("getting user media");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log("setting recorder");
+      audioStream = stream;
+      // Create a new instance of RecordRTC with the audio stream
+      recorder = new RecordRTC(stream, {
+        type: "audio",
+        mimeType: "audio/wav", // Specify desired output format
+        recorderType: RecordRTC.StereoAudioRecorder, // Explicitly set for Safari compatibility
+        numberOfAudioChannels: 1, // Mono audio may be beneficial for compatibility
+        // desiredSampRate: 16000, // Optional: Specify sample rate
       });
+      console.log("recorder set", recorder);
+    } catch (error) {
+      console.error("Error accessing the microphone:", error);
+      throw error; // Propagate error to be caught in the click handler
+    }
   }
 
-  document.getElementById("startRecord").addEventListener("click", () => {
-    if (recorder) {
-      recorder.startRecording();
-      document.getElementById("startRecord").style.display = "none";
-      document.getElementById("stopRecord").style.display = "inline-block";
-    } else {
-      console.log("Recorder not initialized");
+  document.getElementById("startRecord").addEventListener("click", async () => {
+    document.getElementById("startRecord").disabled = true;
+    try {
+      // Call initRecording to set up
+      await initRecording();
+      console.log(recorder);
+      if (recorder) {
+        recorder.startRecording();
+        document.getElementById("startRecord").style.display = "none";
+        document.getElementById("stopRecord").style.display = "inline-block";
+      } else {
+        console.log("Recorder not initialized");
+        document.getElementById("startRecord").disabled = false;
+      }
+    } catch (error) {
+      console.log("Initialization failed", error);
+      document.getElementById("startRecord").disabled = false;
     }
   });
 
@@ -163,12 +181,9 @@ if (audioElement) {
       console.log("Recorder not initialized or recording not stopped.");
     }
   });
-
-  // Call initRecording to set up
-  initRecording();
-
-  //// end recording
 }
+
+//// end recording
 
 // countdown
 function startCountdown() {

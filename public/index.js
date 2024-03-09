@@ -146,6 +146,7 @@ if (audioElement) {
     document.getElementById("audioPlayback").style.display = "none";
     document.getElementById("resetRecord").style.display = "none";
     document.getElementById("uploadRecord").style.display = "none";
+    document.getElementById("startRecord").disabled = false;
   });
 
   // Assuming recorder is your RecordRTC instance

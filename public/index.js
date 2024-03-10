@@ -214,3 +214,31 @@ document.addEventListener("DOMContentLoaded", function () {
 function redirectToHome() {
   window.location.href = "/";
 }
+
+// download button
+async function fetchImageAsBlob(imageUrl) {
+  try {
+    const response = await fetch(imageUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const imageBlob = await response.blob();
+    return imageBlob;
+  } catch (error) {
+    console.error("Error fetching image:", error);
+  }
+}
+
+document
+  .getElementById("fetchImageButton")
+  .addEventListener("click", async () => {
+    // Specify the URL of the image you want to fetch
+    const imageUrl = "https://example.com/path/to/your/image.jpg";
+
+    const imageBlob = await fetchImageAsBlob(imageUrl);
+    if (imageBlob) {
+      // Convert the Blob to an object URL and set it as the image source
+      const objectURL = URL.createObjectURL(imageBlob);
+      document.getElementById("displayedImage").src = objectURL;
+    }
+  });

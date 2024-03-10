@@ -217,28 +217,35 @@ function redirectToHome() {
 
 // download button
 async function fetchImageAsBlob(imageUrl) {
-  try {
-    const response = await fetch(imageUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const imageBlob = await response.blob();
-    return imageBlob;
-  } catch (error) {
-    console.error("Error fetching image:", error);
-  }
+  fetch(imageUrl, { mode: "no-cors" })
+    .then((response) => {
+      console.log(response);
+      return response;
+      // Note: response.body is unreadable, so you can't directly manipulate the image data
+    })
+    .catch((error) => {
+      console.error("Fetch error:", error);
+    });
 }
 
-document
-  .getElementById("fetchImageButton")
-  .addEventListener("click", async () => {
-    // Specify the URL of the image you want to fetch
-    const imageUrl = "https://example.com/path/to/your/image.jpg";
+document.addEventListener("DOMContentLoaded", () => {
+  document
+    .getElementById("fetchImageButton")
+    .addEventListener("click", async () => {
+      // Get the URL from the input field
+      const imageUrl = document.getElementById("imageUrlInput").innerHTML;
+      console.log(imageUrl);
 
-    const imageBlob = await fetchImageAsBlob(imageUrl);
-    if (imageBlob) {
-      // Convert the Blob to an object URL and set it as the image source
-      const objectURL = URL.createObjectURL(imageBlob);
-      document.getElementById("displayedImage").src = objectURL;
-    }
-  });
+      if (imageUrl) {
+        // Check if the URL is not empty
+        const imageBlob = await fetchImageAsBlob(imageUrl);
+        if (imageBlob) {
+          // Convert the Blob to an object URL and set it as the image source
+          const objectURL = URL.createObjectURL(imageBlob);
+          document.getElementById("displayedImage").src = objectURL;
+        }
+      } else {
+        alert("Please enter an image URL.");
+      }
+    });
+});

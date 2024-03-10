@@ -143,7 +143,7 @@ if (audioElement) {
     recorder.reset();
     // audioStream.getTracks().forEach((track) => track.stop()); // Optional: Stop the audio stream
     document.getElementById("startRecord").style.display = "inline-block";
-    document.getElementById("audioPlayback").style.display = "none";
+    document.getElementById("audioPlayback").hidden = true;
     document.getElementById("resetRecord").style.display = "none";
     document.getElementById("uploadRecord").style.display = "none";
     document.getElementById("startRecord").disabled = false;

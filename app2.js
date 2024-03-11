@@ -8,6 +8,7 @@ const OpenAI = require("openai");
 const path = require("path");
 const axios = require("axios"); // for audio
 const fs = require("fs");
+const fetch = require("node-fetch");
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
 
@@ -18,6 +19,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
 const openAiApiKey = process.env.API_KEY; // Ensure your API key is loaded from environment variables
 const openai = new OpenAI({ apiKey: openAiApiKey });
+let image_url_pass; // variable to pass the image url to the download
 
 app.post("/upload", upload.single("picture"), async (req, res) => {
   try {
@@ -69,6 +71,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       size: "1024x1024",
     });
     image_url = imageGenResponse.data[0].url;
+    image_url_pass = image_url;
 
     res.render("result", {
       image_url: image_url,
@@ -150,6 +153,7 @@ async function generateImageFromText(textPrompt) {
       size: "1024x1024",
     });
     image_url = imageGenResponse.data[0].url;
+    image_url_pass = image_url;
     image_revised_prompt = imageGenResponse.data[0].revised_prompt;
     console.log(image_url);
     return image_url;
@@ -204,4 +208,23 @@ app.get("/inputPic", (req, res) => {
 
 app.get("/inputAudio", (req, res) => {
   res.render("inputAudio");
+});
+
+app.get("/fetch-openai-image", async (req, res) => {
+  // Get the image URL from query params or send it in the request
+  console.log("we're now in the fetch");
+  const imageUrl = image_url_pass;
+  console.log(imageUrl);
+
+  try {
+    const response = await fetch(imageUrl);
+    const imageBuffer = await response.buffer();
+
+    // Forward the image content type and buffer
+    res.type(response.headers.get("content-type"));
+    res.send(imageBuffer);
+  } catch (error) {
+    console.error("Error fetching image:", error);
+    res.status(500).send("Error fetching image");
+  }
 });

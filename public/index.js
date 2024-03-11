@@ -215,37 +215,29 @@ function redirectToHome() {
   window.location.href = "/";
 }
 
-// download button
-async function fetchImageAsBlob(imageUrl) {
-  fetch(imageUrl, { mode: "no-cors" })
+document.getElementById("downloadImageButton").addEventListener("click", () => {
+  fetch("/fetch-openai-image")
     .then((response) => {
-      console.log(response);
-      return response;
-      // Note: response.body is unreadable, so you can't directly manipulate the image data
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.blob();
+    })
+    .then((blob) => {
+      // Create a URL for the blob
+      const url = window.URL.createObjectURL(blob);
+      // Create a new anchor element
+      const a = document.createElement("a");
+      a.href = url;
+      // Set the filename you want for the downloaded file
+      a.download = "downloadedImage.jpg";
+      // Append the anchor to the body, trigger click to download, and then remove the anchor
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
-    });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  document
-    .getElementById("fetchImageButton")
-    .addEventListener("click", async () => {
-      // Get the URL from the input field
-      const imageUrl = document.getElementById("imageUrlInput").innerHTML;
-      console.log(imageUrl);
-
-      if (imageUrl) {
-        // Check if the URL is not empty
-        const imageBlob = await fetchImageAsBlob(imageUrl);
-        if (imageBlob) {
-          // Convert the Blob to an object URL and set it as the image source
-          const objectURL = URL.createObjectURL(imageBlob);
-          document.getElementById("displayedImage").src = objectURL;
-        }
-      } else {
-        alert("Please enter an image URL.");
-      }
+      console.error("Error downloading image through proxy:", error);
     });
 });

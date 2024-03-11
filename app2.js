@@ -210,6 +210,7 @@ app.get("/inputAudio", (req, res) => {
   res.render("inputAudio");
 });
 
+// to download the pics
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");

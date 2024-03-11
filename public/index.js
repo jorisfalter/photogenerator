@@ -230,7 +230,7 @@ document.getElementById("downloadImageButton").addEventListener("click", () => {
       const a = document.createElement("a");
       a.href = url;
       // Set the filename you want for the downloaded file
-      a.download = "downloadedImage.jpg";
+      a.download = "my-cool-ai-image.jpg";
       // Append the anchor to the body, trigger click to download, and then remove the anchor
       document.body.appendChild(a);
       a.click();

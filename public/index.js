@@ -243,22 +243,30 @@ document.getElementById("downloadImageButton").addEventListener("click", () => {
 });
 
 document.getElementById("shareImageButton").addEventListener("click", () => {
-  console.log("share button clicked");
-  if (navigator.share) {
-    console.log("navigator dot share");
-    navigator
-      .share({
-        title: "Check out this cool image",
-        text: "Generated with AI",
-        url: "/fetch-openai-image", // Assuming this URL is directly accessible; adjust as needed.
-      })
-      .then(() => {
-        console.log("Image shared successfully");
-      })
-      .catch((error) => {
-        console.error("Error sharing:", error);
-      });
-  } else {
-    alert("Web Share API is not supported in this browser.");
-  }
+  fetch("/fetch-openai-image")
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.blob();
+    })
+    .then((blob) => {
+      // Assuming the MIME type of the image is known, e.g., 'image/jpeg'
+      const file = new File([blob], "shared-image.jpg", { type: "image/jpeg" });
+
+      // Check if the Web Share API supports file sharing
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator
+          .share({
+            files: [file],
+            title: "Check out this cool image",
+            text: "Generated with AI",
+          })
+          .then(() => console.log("Share was successful."))
+          .catch((error) => console.error("Sharing failed", error));
+      } else {
+        console.log("Your browser does not support sharing files.");
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching image:", error);
+    });
 });

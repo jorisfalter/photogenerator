@@ -241,3 +241,24 @@ document.getElementById("downloadImageButton").addEventListener("click", () => {
       console.error("Error downloading image through proxy:", error);
     });
 });
+
+document.getElementById("shareImageButton").addEventListener("click", () => {
+  console.log("share button clicked");
+  if (navigator.share) {
+    console.log("navigator dot share");
+    navigator
+      .share({
+        title: "Check out this cool image",
+        text: "Generated with AI",
+        url: "/fetch-openai-image", // Assuming this URL is directly accessible; adjust as needed.
+      })
+      .then(() => {
+        console.log("Image shared successfully");
+      })
+      .catch((error) => {
+        console.error("Error sharing:", error);
+      });
+  } else {
+    alert("Web Share API is not supported in this browser.");
+  }
+});

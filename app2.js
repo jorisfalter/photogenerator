@@ -14,6 +14,16 @@ app.set("view engine", "ejs"); // Set EJS as the template engine
 
 app.use(express.static("public"));
 
+const session = require("express-session");
+app.use(
+  session({
+    secret: "your secret key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
+
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });

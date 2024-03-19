@@ -164,7 +164,7 @@ async function generateImageFromText(req, textPrompt) {
     });
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
-    req.session.imageUrl = imageUrl;
+    req.session.imageUrl = image_url;
 
     // image_revised_prompt = imageGenResponse.data[0].revised_prompt;
     console.log(image_url);
@@ -226,11 +226,14 @@ app.get("/inputAudio", (req, res) => {
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");
+  console.log(req.session.imageUrl);
   const imageUrl = image_url_pass;
   // if (req.session.imageUrl) {
   //   const imageUrl = req.session.imageUrl;
+  // } else {
+  //   console.log("error on downloading the imageurl");
   // }
-  //  else {} // no else yet
+
   console.log(imageUrl);
 
   try {

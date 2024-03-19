@@ -17,7 +17,7 @@ app.use(express.static("public"));
 const session = require("express-session");
 app.use(
   session({
-    secret: "your secret key",
+    secret: "your secret key", // update this!
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true },
@@ -153,7 +153,7 @@ async function convertSpeechToText(audioBuffer, fileName) {
 }
 
 // Function to generate an image from text
-async function generateImageFromText(textPrompt) {
+async function generateImageFromText(req, textPrompt) {
   try {
     // ... logic to handle the description and generate an image ...
     const imageGenResponse = await openai.images.generate({
@@ -164,7 +164,7 @@ async function generateImageFromText(textPrompt) {
     });
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
-    // req.session.imageUrl = imageUrl;
+    req.session.imageUrl = imageUrl;
 
     // image_revised_prompt = imageGenResponse.data[0].revised_prompt;
     console.log(image_url);
@@ -186,7 +186,7 @@ app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
     // Assuming convertSpeechToText function is defined and returns the transcribed text
     const textObject = await convertSpeechToText(req.file.buffer, "aFileName");
     const text = textObject.text;
-    const image_url = await generateImageFromText(text);
+    const image_url = await generateImageFromText(req, text);
     console.log("we will now render the image");
     // Optionally, further process the text or directly send it back
     // res.json({ success: true, audioInput: text, imageUrl: image_url });

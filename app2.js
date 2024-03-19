@@ -82,6 +82,9 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     });
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
+    req.session.imageUrl = image_url;
+    console.log("req.session.imageUrl");
+    console.log(req.session.imageUrl);
 
     res.render("result", {
       image_url: image_url,
@@ -165,6 +168,8 @@ async function generateImageFromText(req, textPrompt) {
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
     req.session.imageUrl = image_url;
+    console.log("req.session.imageUrl");
+    console.log(req.session.imageUrl);
 
     // image_revised_prompt = imageGenResponse.data[0].revised_prompt;
     console.log(image_url);
@@ -174,7 +179,6 @@ async function generateImageFromText(req, textPrompt) {
     throw error;
   }
 }
-//// end audiofiles
 
 //// audio endpoint
 app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
@@ -226,7 +230,7 @@ app.get("/inputAudio", (req, res) => {
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");
-  console.log(req.session.imageUrl);
+  console.log(req.session.imageUrl); // this one is undefined
   const imageUrl = image_url_pass;
   // if (req.session.imageUrl) {
   //   const imageUrl = req.session.imageUrl;

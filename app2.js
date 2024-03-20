@@ -83,7 +83,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
     req.session.imageUrl = image_url;
-    console.log("req.session.imageUrl");
+    console.log("req.session.imageUrl pic");
     console.log(req.session.imageUrl);
 
     res.render("result", {
@@ -155,7 +155,7 @@ async function convertSpeechToText(audioBuffer, fileName) {
   }
 }
 
-// Function to generate an image from text
+// Function to generate an image from text - only used for audio
 async function generateImageFromText(req, textPrompt) {
   try {
     // ... logic to handle the description and generate an image ...
@@ -168,7 +168,7 @@ async function generateImageFromText(req, textPrompt) {
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
     req.session.imageUrl = image_url;
-    console.log("req.session.imageUrl");
+    console.log("req.session.imageUrl audio");
     console.log(req.session.imageUrl);
 
     // image_revised_prompt = imageGenResponse.data[0].revised_prompt;

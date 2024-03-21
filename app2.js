@@ -20,7 +20,7 @@ app.use(
     secret: "your secret key", // update this!
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true },
+    // cookie: { secure: true }, // turn off for local
   })
 );
 
@@ -172,7 +172,7 @@ async function generateImageFromText(req, textPrompt) {
     console.log(req.session.imageUrl);
 
     // image_revised_prompt = imageGenResponse.data[0].revised_prompt;
-    console.log(image_url);
+    // console.log(image_url);
     return image_url;
   } catch (error) {
     console.error("Error generating image from text:", error);
@@ -209,9 +209,12 @@ app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
   }
 });
 
+// only for audio
 app.get("/result", (req, res) => {
   // Extract query parameters
   const { image_url, description } = req.query;
+  console.log("we're now in the result page");
+  console.log(req.session.imageUrl);
   res.render("result", {
     image_url: image_url,
     description: description,
@@ -230,18 +233,15 @@ app.get("/inputAudio", (req, res) => {
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");
-  console.log(req.session.imageUrl); // this one is undefined
-  const imageUrl = image_url_pass;
-  // if (req.session.imageUrl) {
-  //   const imageUrl = req.session.imageUrl;
-  // } else {
-  //   console.log("error on downloading the imageurl");
-  // }
+  console.log(req.session.imageUrl); // this one is undefined for audio
+  // const imageUrl = image_url_pass;
+  const imageUrlSession = req.session.imageUrl;
+  console.log("imageUrlSession:");
 
-  console.log(imageUrl);
+  console.log(imageUrlSession);
 
   try {
-    const response = await fetch(imageUrl);
+    const response = await fetch(imageUrlSession);
     const imageBuffer = await response.buffer();
 
     // Forward the image content type and buffer

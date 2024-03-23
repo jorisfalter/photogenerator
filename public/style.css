@@ -264,7 +264,7 @@ button:disabled {
 .input-selection-button {
     /* display: inline-block; */
     padding: 10px 20px;
-    background-color: #007bff;
+    /* background-color: #007bff; */
     color: white;
     text-align: center;
     text-decoration: none;

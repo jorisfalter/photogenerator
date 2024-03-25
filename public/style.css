@@ -277,3 +277,10 @@ button:disabled {
     margin-right:20px;
   }
   
+
+  /* Hide the share button on screens wider than 768 pixels */
+@media (min-width: 769px) {
+    #shareImageButton {
+        display: none;
+    }
+}

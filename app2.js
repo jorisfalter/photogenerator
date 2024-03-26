@@ -17,7 +17,7 @@ app.use(express.static("public"));
 const session = require("express-session");
 app.use(
   session({
-    secret: "your secret key", // update this!
+    secret: process.env.SESSION_KEY || "your secret key", // update this!
     resave: false,
     saveUninitialized: true,
     // cookie: { secure: true }, // turn off for local
@@ -27,7 +27,7 @@ app.use(
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: multer.memoryStorage() });
-const openAiApiKey = process.env.API_KEY; // Ensure your API key is loaded from environment variables
+const openAiApiKey = process.env.API_KEY;
 const openai = new OpenAI({ apiKey: openAiApiKey });
 let image_url_pass; // variable to pass the image url to the download
 

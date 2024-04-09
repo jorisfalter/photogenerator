@@ -49,7 +49,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "can you describe this drawing?",
+              text: "Describe the objects and setting of this drawing, without it mentioning it's a drawing or a sketch?",
             },
             {
               type: "image_url",
@@ -68,10 +68,9 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const descriptionInput = response.choices[0].message.content;
     console.log(descriptionInput);
     const description =
-      // "the following is a description of a drawing made by a child, I would like you to turn it into a photo realistic image, suitable for children: " +
-      "I would like to create a photo realistic picture, suitable for children, based on following description: " +
-      descriptionInput +
-      " The result should be a photorealistic real picture";
+      // "the following is a description of what's represented in a drawing made by a child, I would like the generated photo making the drawin come alive: "
+      "Create a photo-realistic image of : " +
+      descriptionInput 
 
     // ... logic to handle the description and generate an image ...
     const imageGenResponse = await openai.images.generate({

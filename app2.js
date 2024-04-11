@@ -68,9 +68,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const descriptionInput = response.choices[0].message.content;
     console.log(descriptionInput);
     const description =
-      // "the following is a description of what's represented in a drawing made by a child, I would like the generated photo making the drawin come alive: "
-      "Create a photo-realistic image of : " +
-      descriptionInput 
+      "Create a photo-realistic image of : " + descriptionInput;
 
     // ... logic to handle the description and generate an image ...
     const imageGenResponse = await openai.images.generate({

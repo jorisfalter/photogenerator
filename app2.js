@@ -52,6 +52,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       Authorization: `Bearer ${openAiApiKey}`,
     };
 
+    // create the payload to send it to openai to get a description
     const payload = {
       model: "gpt-4-vision-preview",
       messages: [
@@ -72,6 +73,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
       max_tokens: 300,
     };
 
+    // Call openai to ask a description of the image
     const response = await openai.chat.completions.create(payload, {
       headers: headers,
     });
@@ -117,7 +119,7 @@ app.listen(PORT, () => {
 });
 
 ///////////////////// Audio ////////////////////////////
-// Function to convert speech to text
+// Convert speech to text
 async function convertSpeechToText(audioBuffer, fileName) {
   const formData = new FormData();
   // Append the buffer directly, specifying filename and content type
@@ -159,7 +161,7 @@ async function convertSpeechToText(audioBuffer, fileName) {
   }
 }
 
-// Function to generate an image from text - only used for audio
+// Generate an image from text - only used for audio
 async function generateImageFromText(req, textPrompt) {
   try {
     // Call function to generate an image from text
@@ -178,7 +180,7 @@ async function generateImageFromText(req, textPrompt) {
   }
 }
 
-//// audio endpoint
+//// audio endpoint - what is this again?
 app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");

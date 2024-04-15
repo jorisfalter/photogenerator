@@ -31,6 +31,17 @@ const openAiApiKey = process.env.API_KEY;
 const openai = new OpenAI({ apiKey: openAiApiKey });
 let image_url_pass; // variable to pass the image url to the download
 
+// call openai api to generate an Image
+async function generateImage(promptText) {
+  const response = await openai.images.generate({
+    model: "dall-e-3",
+    prompt: promptText,
+    n: 1,
+    size: "1024x1024",
+  });
+  return response;
+}
+
 app.post("/upload", upload.single("picture"), async (req, res) => {
   try {
     const imageBuffer = req.file.buffer;
@@ -70,13 +81,9 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const description =
       "Create a photo-realistic image of : " + descriptionInput;
 
-    // ... logic to handle the description and generate an image ...
-    const imageGenResponse = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: description,
-      n: 1,
-      size: "1024x1024",
-    });
+    // Call function to generate an image from text
+    const imageGenResponse = await generateImage(description);
+
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
     req.session.imageUrl = image_url;
@@ -109,7 +116,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-//// for audiofiles
+///////////////////// Audio ////////////////////////////
 // Function to convert speech to text
 async function convertSpeechToText(audioBuffer, fileName) {
   const formData = new FormData();
@@ -155,21 +162,15 @@ async function convertSpeechToText(audioBuffer, fileName) {
 // Function to generate an image from text - only used for audio
 async function generateImageFromText(req, textPrompt) {
   try {
-    // ... logic to handle the description and generate an image ...
-    const imageGenResponse = await openai.images.generate({
-      model: "dall-e-3",
-      prompt: textPrompt,
-      n: 1,
-      size: "1024x1024",
-    });
+    // Call function to generate an image from text
+    const imageGenResponse = await generateImage(textPrompt);
+
     image_url = imageGenResponse.data[0].url;
     image_url_pass = image_url;
     req.session.imageUrl = image_url;
     console.log("req.session.imageUrl audio");
     console.log(req.session.imageUrl);
 
-    // image_revised_prompt = imageGenResponse.data[0].revised_prompt;
-    // console.log(image_url);
     return image_url;
   } catch (error) {
     console.error("Error generating image from text:", error);
@@ -184,7 +185,6 @@ app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
   }
 
   try {
-    // Assuming convertSpeechToText function is defined and returns the transcribed text
     const textObject = await convertSpeechToText(req.file.buffer, "aFileName");
     const text = textObject.text;
     const image_url = await generateImageFromText(req, text);

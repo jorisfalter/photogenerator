@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" , initial-scale=1 />
+
+    <title>AI Juniors</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+    <header>
+        <div class="header-content" onclick="redirectToHome()">
+            <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
+            <div class="header-text">
+                <h1>AI Juniors</h1>
+                <p>Powered by Reggio Home</p>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="homepage-container">
+
+            <div>
+                <h2>Free Image Generator </h2>
+                <h3>Make Your Children's Ideas Become Real</h3>
+            </div>
+            <div class="audio-container">
+                <button id="startRecord">Start Recording</button>
+                <button id="stopRecord" style="display:none">Stop Recording</button>
+                <audio id="audioPlayback" controls hidden></audio>
+                <button id="uploadRecord" style="display:none">Upload Recording</button>
+                <button id="resetRecord" style="display:none">Reset Recording</button>
+
+            </div>
+            <div id="loadingAnimationId" style="display: none;">
+                We are thinking we are thinking! <span id="countdown">28</span> seconds left.
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>Founded in the Netherlands, we respect your privacy by not storing your drawings or audio</p>
+
+        <p id="footer-text">© <span id="current-year"></span> AI Juniors</p>
+    </footer>
+</body>
+<script src="https://unpkg.com/recordrtc"></script>
+
+<script src="index.js"></script>
+
+</html>

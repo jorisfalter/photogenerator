@@ -9,6 +9,7 @@ const path = require("path");
 const axios = require("axios"); // for audio
 const fs = require("fs");
 const fetch = require("node-fetch");
+const uuid = require("uuid");
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
 
@@ -23,6 +24,8 @@ app.use(
     // cookie: { secure: true }, // turn off for local
   })
 );
+
+const tasks = {}; // List of tasks which are brought to the background. This would ideally be a persistent storage solution
 
 // Configure multer for memory storage
 const storage = multer.memoryStorage();
@@ -42,6 +45,8 @@ async function generateImage(promptText) {
   return response;
 }
 
+///////////////////// Pics ////////////////////////////
+// Describe the pic first
 app.post("/upload", upload.single("picture"), async (req, res) => {
   try {
     const imageBuffer = req.file.buffer;
@@ -83,6 +88,21 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const description =
       "Create a photo-realistic image of : " + descriptionInput;
 
+    //////////////// start of the new stuff
+    // Generate a unique task ID
+    const taskId = uuid.v4(); // Ensure you have 'uuid' installed and imported
+
+    // Save the task information in a database or in-memory store
+    // For demonstration purposes, we're using an in-memory object
+    tasks[taskId] = { status: "pending", imageUrl: null };
+
+    // Respond immediately with the task ID
+    // THIS IS GOING TO CONFLICT WITH RES.RENDER BUT I DON'T KNOW YET HOW
+    // res.json({ taskId: taskId });
+
+    // Move the long-running task to a separate function or worker
+    //////////////// end of the new stuff
+
     // Call function to generate an image from text
     const imageGenResponse = await generateImage(description);
 
@@ -102,6 +122,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
   }
 });
 
+///////////////////// General stuff - should move this down ////////////////////////////
 // Root route to serve the index.html file
 app.get("/", (req, res) => {
   // res.sendFile(path.join(__dirname, "public", "index.html"));

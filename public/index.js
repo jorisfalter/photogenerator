@@ -50,8 +50,8 @@ if (picElement) {
 
       // Create a FormData object, passing the form as a parameter
       var formData = new FormData(this);
-      const statusMessage = document.getElementById("statusMessage");
-      statusMessage.textContent = "Processing..."; // Provide immediate feedback
+      // const statusMessage = document.getElementById("statusMessage");
+      // statusMessage.textContent = "Processing..."; // Provide immediate feedback
 
       fetch("/upload", {
         method: "POST",
@@ -64,8 +64,8 @@ if (picElement) {
             pollStatus(data.taskId); // Start polling for status
           } else {
             console.error("No task ID returned from server");
-            statusMessage.textContent =
-              "Failed to start the image generation process.";
+            // statusMessage.textContent =
+            //   "Failed to start the image generation process.";
           }
         })
         .catch((error) => console.error("Error uploading image:", error));

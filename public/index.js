@@ -2,7 +2,7 @@
 // Function to call after a picture is uploaded and processed
 function adjustMainPadding() {
   document.querySelector("main").style.paddingTop = "200px"; // Adjust this value to the header's height
-  console.log("padding adjusted");
+  // console.log("padding adjusted");
 }
 
 // pic upload
@@ -14,7 +14,7 @@ if (picElement) {
     var imagePreview = document.getElementById("imagePreview");
     var files = event.target.files; // FileList object
     f = files[0];
-    console.log(files[0]);
+    // console.log(files[0]);
 
     var reader = new FileReader();
 
@@ -41,6 +41,36 @@ if (picElement) {
     button.style.display = "block"; // Make the button take up space
   });
 
+  document
+    .getElementById("uploadForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault(); // Stop the form from submitting normally
+
+      // console.log("submission intercepted");
+
+      // Create a FormData object, passing the form as a parameter
+      var formData = new FormData(this);
+      const statusMessage = document.getElementById("statusMessage");
+      statusMessage.textContent = "Processing..."; // Provide immediate feedback
+
+      fetch("/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.taskId) {
+            console.log("starting polling function");
+            pollStatus(data.taskId); // Start polling for status
+          } else {
+            console.error("No task ID returned from server");
+            statusMessage.textContent =
+              "Failed to start the image generation process.";
+          }
+        })
+        .catch((error) => console.error("Error uploading image:", error));
+    });
+
   // do animation while waiting
   document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("uploadForm");
@@ -64,6 +94,23 @@ if (picElement) {
   observer.observe(document.getElementById("loadingAnimationId"), {
     attributes: true, //configure it to listen to attribute changes
   });
+}
+
+// Polling solution as Heroku doesn't allow to wait longer than 30 seconds
+function pollStatus(taskId) {
+  fetch(`/status/${taskId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("polling");
+      if (data.status === "completed") {
+        window.location.href = `/result/${taskId}`; // Redirect to the result page
+      } else if (data.status === "pending") {
+        setTimeout(() => pollStatus(taskId), 5000); // Poll every 5 seconds
+      } else {
+        console.error("Task failed or unknown status");
+      }
+    })
+    .catch((error) => console.error("Error polling task status:", error));
 }
 
 // recording
@@ -215,58 +262,68 @@ function redirectToHome() {
   window.location.href = "/";
 }
 
-document.getElementById("downloadImageButton").addEventListener("click", () => {
-  fetch("/fetch-openai-image")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.blob();
-    })
-    .then((blob) => {
-      // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
-      // Create a new anchor element
-      const a = document.createElement("a");
-      a.href = url;
-      // Set the filename you want for the downloaded file
-      a.download = "my-cool-ai-image.jpg";
-      // Append the anchor to the body, trigger click to download, and then remove the anchor
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    })
-    .catch((error) => {
-      console.error("Error downloading image through proxy:", error);
+// result page
+const resultElement = document.getElementById("downloadImageButton");
+if (resultElement) {
+  // Download button
+  document
+    .getElementById("downloadImageButton")
+    .addEventListener("click", () => {
+      fetch("/fetch-openai-image")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.blob();
+        })
+        .then((blob) => {
+          // Create a URL for the blob
+          const url = window.URL.createObjectURL(blob);
+          // Create a new anchor element
+          const a = document.createElement("a");
+          a.href = url;
+          // Set the filename you want for the downloaded file
+          a.download = "my-cool-ai-image.jpg";
+          // Append the anchor to the body, trigger click to download, and then remove the anchor
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        })
+        .catch((error) => {
+          console.error("Error downloading image through proxy:", error);
+        });
     });
-});
 
-document.getElementById("shareImageButton").addEventListener("click", () => {
-  fetch("/fetch-openai-image")
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.blob();
-    })
-    .then((blob) => {
-      // Assuming the MIME type of the image is known, e.g., 'image/jpeg'
-      const file = new File([blob], "shared-image.jpg", { type: "image/jpeg" });
+  // Share button
+  document.getElementById("shareImageButton").addEventListener("click", () => {
+    fetch("/fetch-openai-image")
+      .then((response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.blob();
+      })
+      .then((blob) => {
+        // Assuming the MIME type of the image is known, e.g., 'image/jpeg'
+        const file = new File([blob], "shared-image.jpg", {
+          type: "image/jpeg",
+        });
 
-      // Check if the Web Share API supports file sharing
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        navigator
-          .share({
-            files: [file],
-            title: "Check out this cool image",
-            text: "Generated with AI",
-          })
-          .then(() => console.log("Share was successful."))
-          .catch((error) => console.error("Sharing failed", error));
-      } else {
-        console.log("Your browser does not support sharing files.");
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching image:", error);
-    });
-});
+        // Check if the Web Share API supports file sharing
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator
+            .share({
+              files: [file],
+              title: "Check out this cool image",
+              text: "Generated with AI",
+            })
+            .then(() => console.log("Share was successful."))
+            .catch((error) => console.error("Sharing failed", error));
+        } else {
+          console.log("Your browser does not support sharing files.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+      });
+  });
+}

@@ -34,14 +34,25 @@ const openAiApiKey = process.env.API_KEY;
 const openai = new OpenAI({ apiKey: openAiApiKey });
 let image_url_pass; // variable to pass the image url to the download
 
-// call openai api to generate an Image
-async function generateImage(promptText) {
+// call openai api to generate an Image - used both by Audio and Text
+async function generateImage(taskId, promptText) {
+  console.log("starting to generate an image");
+  // in the new offloaded process, I should add a "try" here
+
   const response = await openai.images.generate({
     model: "dall-e-3",
     prompt: promptText,
     n: 1,
     size: "1024x1024",
   });
+
+  // Update the task with the result
+  const imageUrl = response.data[0].url;
+  tasks[taskId] = { status: "completed", imageUrl: imageUrl };
+  // console.log("tasks");
+  // console.log(taskId);
+  // console.log(tasks[taskId]);
+
   return response;
 }
 
@@ -88,37 +99,55 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const description =
       "Create a photo-realistic image of : " + descriptionInput;
 
-    //////////////// start of the new stuff
+    // Start on the image generation
     // Generate a unique task ID
     const taskId = uuid.v4(); // Ensure you have 'uuid' installed and imported
 
-    // Save the task information in a database or in-memory store
-    // For demonstration purposes, we're using an in-memory object
+    // Save the task information in a database or in-memory store, For demonstration purposes, we're using an in-memory object
     tasks[taskId] = { status: "pending", imageUrl: null };
 
-    // Respond immediately with the task ID
-    // THIS IS GOING TO CONFLICT WITH RES.RENDER BUT I DON'T KNOW YET HOW
-    // res.json({ taskId: taskId });
-
-    // Move the long-running task to a separate function or worker
-    //////////////// end of the new stuff
-
     // Call function to generate an image from text
-    const imageGenResponse = await generateImage(description);
+    // const imageGenResponse = await
+    generateImage(taskId, description);
 
-    image_url = imageGenResponse.data[0].url;
-    image_url_pass = image_url;
-    req.session.imageUrl = image_url;
-    console.log("req.session.imageUrl pic");
-    console.log(req.session.imageUrl);
-
-    res.render("result", {
-      image_url: image_url,
-      description: description,
-    });
+    // Respond immediately with the task ID
+    res.json({ taskId: taskId });
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).render("error", { error: "Error processing image" });
+    res.status(500).json({ error: "Error processing image" });
+  }
+});
+
+// polling
+app.get("/status/:taskId", (req, res) => {
+  const taskId = req.params.taskId;
+  const task = tasks[taskId];
+
+  if (task) {
+    res.json({ status: task.status, imageUrl: task.imageUrl });
+  } else {
+    res.status(404).json({ error: "Task not found" });
+  }
+});
+
+app.get("/result/:taskId", (req, res) => {
+  const taskId = req.params.taskId;
+  const task = tasks[taskId];
+
+  // image_url_pass = task.imageUrl;
+  req.session.imageUrl = task.imageUrl;
+  // console.log("req.session.imageUrl pic");
+  // console.log(req.session.imageUrl);
+
+  if (task && task.status === "completed") {
+    res.render("result", {
+      image_url: task.imageUrl,
+      // description: task.description, // Assuming you stored the description as well
+    });
+  } else {
+    res.status(404).render("error", {
+      error: "No completed task found or task not yet completed.",
+    });
   }
 });
 
@@ -186,10 +215,10 @@ async function convertSpeechToText(audioBuffer, fileName) {
 async function generateImageFromText(req, textPrompt) {
   try {
     // Call function to generate an image from text
-    const imageGenResponse = await generateImage(textPrompt);
+    const imageGenResponse = await generateImage("dummy_taskID", textPrompt);
 
     image_url = imageGenResponse.data[0].url;
-    image_url_pass = image_url;
+    // image_url_pass = image_url;
     req.session.imageUrl = image_url;
     console.log("req.session.imageUrl audio");
     console.log(req.session.imageUrl);
@@ -253,11 +282,10 @@ app.get("/inputAudio", (req, res) => {
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");
-  console.log(req.session.imageUrl); // this one is undefined for audio
+  console.log(req.session.imageUrl);
   // const imageUrl = image_url_pass;
   const imageUrlSession = req.session.imageUrl;
   console.log("imageUrlSession:");
-
   console.log(imageUrlSession);
 
   try {

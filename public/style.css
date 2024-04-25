@@ -75,44 +75,62 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    padding-top: 60px; /* Adjust this value based on your header's height */
-    padding-bottom: 60px; /* Adjust this value based on your footer's height */
+    padding-top: 10px; /* Adjust this value based on your header's height */
+    padding-bottom: 10px; /* Adjust this value based on your footer's height */
 }
 
-form {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+/* Index page */
+.container {
+    display: flex;
+    flex-direction: column; /* Stacks children vertically */
+    align-items: center;    /* Centers children horizontally */
+    justify-content: center; /* Centers content vertically in the container */
+    width: 100%;            /* Takes full width of its parent element */
+    height: auto;           /* Auto-adjusts height based on content */
+ }
+ 
+ 
+ .box {
     display: flex;
     flex-direction: column;
-    /* gap: 10px; */
-    width:350px;
-    /* margin:10px 0; */
-}
-
-.homepage-container{
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 300px;
+    margin: 10px; /* Adjust spacing between boxes */
+    background-color: #fcfeff;
+    box-shadow: 5px 20px 16px rgba(0,0,0,0.1);
+    border-radius: 15px;
+ }
+ 
+ 
+ /* Container to hold both boxes side by side */
+ .boxes-container {
     display: flex;
-    flex-direction: column;
-    width:390px;
-    text-align:center;
-}
-
-.audio-container{
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    width:350px;
-    /* margin:10px 0; */
-    text-align:center;
-}
+    justify-content: center;
+    align-items: center;
+ }
+ 
+ 
+    .box a {
+    display: flex;       /* Makes the anchor a flex container */
+    justify-content: center; /* Centers children horizontally */
+    align-items: center; /* Centers children vertically */
+    width: 100%;         /* Takes full width of its parent .box */
+    height: 100%;        /* Takes full height of its parent .box */
+ }
+ 
+ 
+    .box img {
+        width: 75%;        /* Adjust width as needed, up to 75% of the parent container */
+        height: auto;      /* Maintain aspect ratio */
+        display: block;    /* Ensure it's treated as block-level for better control */
+    }
+ .text-box {
+    text-align: center;
+    background-color: none;
+ }
+ 
 
 .custom-file-upload {
     border: 1px solid #ccc;

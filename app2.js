@@ -77,7 +77,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "Describe what is represented in this child's drawing.",
+              text: "Describe this drawing in detail, including all visible elements and their arrangement.",
             },
             {
               type: "image_url",
@@ -97,7 +97,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const descriptionInput = response.choices[0].message.content;
     console.log(descriptionInput);
     const description =
-      "The following is a description of a drawing made by a child. Children often use bright colors and simplistic lines and shapes to make their representations of real life objects, wihtout it intentionally looking this way. Using the detailed description provided, generate a photorealistic image that transforms the drawing into a real-life realistic version : " + descriptionInput;
+      "Below is a description of a child's drawing, which should be converted into a realistic photo. The image should capture real-life details and textures, avoiding whimsical or cartoonish elements. Description of the drawing:" +descriptionInput + "Please focus on creating a naturalistic and realistic interpretation of these elements.;" 
 
     // Start on the image generation
     // Generate a unique task ID

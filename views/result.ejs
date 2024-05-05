@@ -25,19 +25,27 @@
         <h1>Here's your real-life picture, hope you like it!</h1>
         <div>
             <img src="<%= image_url %>" alt="Generated Image" class="generated-image">
-         </div>
-         <p class="description-text">Description: <%= description %></p> <!-- This line adds the description -->
-        <div class="result-buttons">
-            <!-- <a href="<%= image_url %>" download="MyCoolAiPic.jpg"><button>Download</button></a> -->
-
-
-            <button id="downloadImageButton" download=" MyCoolPic.jpg">Download Image</button>
-            <button id="shareImageButton">Share Image</button>
-
-
-
-            <a href="/"><button>Create Another Image</button></a>
         </div>
+
+        <% if (description!=="picInputNoDescription" ) { %>
+
+            <p class="description-text">Description: <%= description %>
+            </p> <!-- This line adds the description -->
+
+            <% } %>
+
+
+                <div class="result-buttons">
+                    <!-- <a href="<%= image_url %>" download="MyCoolAiPic.jpg"><button>Download</button></a> -->
+
+
+                    <button id="downloadImageButton" download=" MyCoolPic.jpg">Download Image</button>
+                    <button id="shareImageButton">Share Image</button>
+
+
+
+                    <a href="/"><button>Create Another Image</button></a>
+                </div>
     </main>
     <footer>
         <p>Founded in the Netherlands, we respect your privacy by not storing your drawings or audio</p>

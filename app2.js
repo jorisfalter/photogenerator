@@ -97,7 +97,9 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     const descriptionInput = response.choices[0].message.content;
     console.log(descriptionInput);
     const description =
-      "Below is a description of a child's drawing, which should be converted into a realistic photo. The image should capture real-life details and textures, avoiding whimsical or cartoonish elements. Description of the drawing:" +descriptionInput + "Please focus on creating a naturalistic and realistic interpretation of these elements.;" 
+      "Below is a description of a child's drawing, which should be converted into a realistic photo. The image should capture real-life details and textures, avoiding whimsical or cartoonish elements. Description of the drawing:" +
+      descriptionInput +
+      "Please focus on creating a naturalistic and realistic interpretation of these elements.;";
 
     // Start on the image generation
     // Generate a unique task ID
@@ -142,6 +144,7 @@ app.get("/result/:taskId", (req, res) => {
   if (task && task.status === "completed") {
     res.render("result", {
       image_url: task.imageUrl,
+      description: "picInputNoDescription", // the results page expects a description variable for the audio, so we send a hardcoded string
       // description: task.description, // Assuming you stored the description as well
     });
   } else {

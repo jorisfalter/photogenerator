@@ -77,7 +77,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
           content: [
             {
               type: "text",
-              text: "Describe this drawing, without mentioning it's a drawing.",
+              text: "Describe this drawing, without mentioning it's a drawing. Do not use the words: whimsical and childlike",
             },
             {
               type: "image_url",
@@ -279,6 +279,14 @@ app.get("/inputPic", (req, res) => {
 
 app.get("/inputAudio", (req, res) => {
   res.render("inputAudio");
+});
+
+app.get("/chat", (req, res) => {
+  res.render("chat");
+});
+
+app.get("/image", (req, res) => {
+  res.render("image");
 });
 
 // to download the pics

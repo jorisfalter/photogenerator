@@ -79,10 +79,11 @@ body {
     padding-bottom: 10px; /* Adjust this value based on your footer's height */
 }
 
-/* Index page */
+/* containers and boxes */
 .container {
     display: flex;
     flex-direction: column; /* Stacks children vertically */
+    flex-wrap:wrap;
     align-items: center;    /* Centers children horizontally */
     justify-content: center; /* Centers content vertically in the container */
     width: 100%;            /* Takes full width of its parent element */
@@ -97,7 +98,23 @@ body {
     justify-content: center;
     width: 300px;
     height: 300px;
-    margin: 10px; /* Adjust spacing between boxes */
+    margin-left:25px;
+    margin-right:25px; /* Adjust spacing between boxes */
+    background-color: #fcfeff;
+    box-shadow: 5px 20px 16px rgba(0,0,0,0.1);
+    border-radius: 15px;
+ }
+
+ .text-box{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 50px;
+    margin-left: 25px; /* Adjust spacing between boxes */
+    margin-right: 25px;
+    margin-top: 5px;
     background-color: #fcfeff;
     box-shadow: 5px 20px 16px rgba(0,0,0,0.1);
     border-radius: 15px;
@@ -130,6 +147,11 @@ body {
     margin-top: 10px;
  }
  
+ /* links using <a */
+ a {
+    color:black; /* Replace 'blue' with your preferred color */
+    text-decoration: none; /* Removes underline from links */
+}
 
 
 .custom-file-upload {

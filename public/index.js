@@ -327,3 +327,34 @@ if (resultElement) {
       });
   });
 }
+
+// FAQ answer drop downs
+document.addEventListener('DOMContentLoaded', function() {
+  const faqQuestions = document.querySelectorAll('.faq-question');
+
+  faqQuestions.forEach(question => {
+      question.addEventListener('click', function() {
+          const faqItem = this.parentElement;
+          const faqAnswer = this.nextElementSibling;
+
+          if (faqItem.classList.contains('open')) {
+              faqItem.classList.remove('open');
+              faqAnswer.style.maxHeight = '0px';
+          } else {
+              faqItem.classList.add('open');
+              faqAnswer.style.maxHeight = faqAnswer.scrollHeight + 'px';
+          }
+
+          // Optional: Close other open FAQ items if only one should be open at a time
+          faqQuestions.forEach(q => {
+              if (q !== this && q.parentElement.classList.contains('open')) {
+                  q.parentElement.classList.remove('open');
+                  q.nextElementSibling.style.maxHeight = '0px';
+              }
+          });
+      });
+  });
+
+  // Set the current year in the footer
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+});

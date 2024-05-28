@@ -3,11 +3,12 @@ header {
     top: 0; /* Align to the top of the page */
     left: 0; /* Align to the left of the page */
     width: 100%; /* Ensure it stretches across the full width */
-    background-color: #f8f8f8;
+    background-color: #FFF2D4;
     padding: 10px 20px;
-    text-align: left;
+    text-align: center;
     z-index: 1000; /* Ensure it stays on top of other content */
     box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Optional: adds shadow for depth */
+    height: 80px;
 
 }
 
@@ -34,7 +35,7 @@ header h1 {
 
 
 .header-logo {
-  max-height: 50px; /* Or the width you want your logo to be */
+  max-height: 75px; /* Or the width you want your logo to be */
   margin-right: 20px; /* Adds some space between the logo and the text */
 }
 
@@ -49,10 +50,35 @@ header p {
   margin: 0;
 }
 
+header nav ul {
+    list-style-type: none; /* Removes default bullet points */
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+header nav ul li {
+    float: left;
+}
+
+header nav ul li a {
+    display: block;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    font-size: 26px;
+    padding: 30px;
+}
+
+header nav ul li a:hover {
+    background-color: #FFF2D4;
+    color: black;
+}
 
 
 h2{
     text-align:center;
+    color: #333;
 }
 
 h3{
@@ -68,9 +94,10 @@ main{
 
 body {
     font-family: 'Arial', sans-serif;
-    /* background-color: #f4f4f4; */
-    background-color: #fff404;
+    background: url('AI Juniors background.webp') no-repeat center center fixed;
+    background-size: cover;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -78,6 +105,69 @@ body {
     padding-top: 10px; /* Adjust this value based on your header's height */
     padding-bottom: 10px; /* Adjust this value based on your footer's height */
 }
+
+/* FAQ page */
+
+/* Ensure your FAQ container looks nice */
+.faq-container {
+    background-color: #FFF2D4;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Maximum width of the container */
+    margin: 0 auto; /* Center the container */
+    width: auto; /* Allow the width to adjust based on content */
+}
+
+/* Style for individual FAQ items */
+.faq-item {
+    margin-bottom: 10px;
+    overflow: hidden; /* This ensures no overflow of content */
+    transition: max-height 0.3s ease-in-out; /* Smooth transition */
+    max-height: 40px; /* Adjust this value based on the height of your question button */
+}
+
+/* Style for FAQ question buttons */
+.faq-question {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #FFF2D4;
+    transition: background-color 0.3s;
+    color: #000;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.faq-question:hover {
+    background-color: #f4ce75;
+}
+
+/* Style for FAQ answers */
+.faq-answer {
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    border-radius: 0 0 5px 5px;
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+}
+
+/* Add class for opened FAQ items */
+.faq-item.open {
+    max-height: 500px; /* Adjust this value based on the content height */
+}
+
+.faq-item.open .faq-answer {
+    max-height: 500px; /* Adjust this value based on the content height */
+}
+
+
 
 /* containers and boxes */
 .container {
@@ -193,7 +283,7 @@ input[type="file"] + label {
 }
 
 button {
-    background: #0056b3;
+    background: #FFF2D4;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -204,14 +294,14 @@ button {
 }
 
 button:hover {
-    background: #004494;
+    background: #ebedef;
 }
 
 footer {
     position: fixed; /* Fixed position */
     bottom: 0; /* Align to the bottom of the page */
     left: 0; /* Align to the left of the page */
-    background-color: #f8f8f8;
+    background-color: #FFF2D4;
     padding: 2px 10px;
     text-align: center;
     z-index: 1000; /* Ensure it stays on top of other content */

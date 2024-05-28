@@ -4,65 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>AI Juniors</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
-    <header>
-        <div class="header-content" onclick="redirectToHome()">
-            <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
-
-            <div class="header-text">
-                <h1>AI Juniors</h1>
-                <p>Powered by Reggio Home</p>
-            </div>
-        </div>
-    </header>
+    <%- include('partials/header') %>
 
     <main>
-            <div class="boxes-container"> <!-- the first row -->
-                <div class="box">
-                    <a href="/image">
-                        <img src="/camera.svg" alt="Camera Image">
-                    </a>
-                </div>
-                <div class="box">
-                    <a href="/chat">
-                        <img src="/Black_question_mark.png" alt="Question mark Image">
-                    </a>
+        <div class="boxes-container">
+            <div class="box">
+                <a href="/image">
+                    <img src="/camera.svg" alt="Camera Image">
+                </a>
+            </div>
+            <div class="box">
+                <a href="/chat">
+                    <img src="/Black_question_mark.png" alt="Question mark Image">
+                </a>
             </div>
         </div>
-        <div class="boxes-container"> <!-- second row-->
-        <div class="text-box">
-            <a href="/image">
-            <h2> Generate image</h2>
-            </a>
+        <div class="boxes-container">
+            <div class="text-box">
+                <a href="/image">
+                <h2>Generate image</h2>
+                </a>
+            </div>
+            <div class="text-box">
+                <a href="/chat">
+                <h2>Ask question</h2>
+                </a>
+            </div>
         </div>
-        <div class="text-box">
-            <a href="/chat">
-            <h2> Ask question</h2>
-            </a>
-        </div>
-        </div>
- 
-
     </main>
 
     <footer>
         <p>Founded in the Netherlands, we respect your privacy by not storing your drawings or audio</p>
-
         <p id="footer-text">© <span id="current-year"></span> AI Juniors</p>
     </footer>
 
-
-</body>
-<script src="index.js"></script>
-
-<script src="https://unpkg.com/recordrtc"></script>
-
-
-
-
+    <script src="index.js"></script>
+    </body>
 </html>

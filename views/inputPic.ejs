@@ -11,16 +11,8 @@
 
 
 <body>
+    <%- include('partials/header') %>
 
-    <header>
-        <div class="header-content" onclick="redirectToHome()">
-            <img src="LogoReggioHome.png" alt="Logo" class="header-logo">
-            <div class="header-text">
-                <h1>AI Juniors</h1>
-                <p>Powered by Reggio Home</p>
-            </div>
-        </div>
-    </header>
     <main>
         <div class="container">
             <form action="/upload" method="post" enctype="multipart/form-data" id="uploadForm">

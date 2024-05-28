@@ -165,6 +165,11 @@ app.get("/test", (req, res) => {
   res.render("result");
 });
 
+app.get('/FAQ', (req, res) => {
+  res.render("FAQ");
+});
+
+
 // Start server
 const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT is not set
 app.listen(PORT, () => {
@@ -311,3 +316,11 @@ app.get("/fetch-openai-image", async (req, res) => {
     res.status(500).send("Error fetching image");
   }
 });
+
+// Route to serve the FAQ page
+app.get('/FAQ', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'FAQ.html'));
+});
+
+
+

@@ -294,6 +294,10 @@ app.get("/image", (req, res) => {
   res.render("image");
 });
 
+app.get("/donate", (req, res) => {
+  res.render("donate");
+});
+
 // to download the pics
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request

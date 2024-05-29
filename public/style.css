@@ -1,64 +1,47 @@
+/* General resets and styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header styles */
 header {
-    position: fixed; /* Fixed position */
-    top: 0; /* Align to the top of the page */
-    left: 0; /* Align to the left of the page */
-    width: 100%; /* Ensure it stretches across the full width */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     background-color: #FFF2D4;
     padding: 10px 20px;
-    text-align: center;
-    z-index: 1000; /* Ensure it stays on top of other content */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Optional: adds shadow for depth */
-    height: 80px;
-
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
-header h1 {
-    margin: 0;
-    color: #333;
-    text-align: left;
-}
-
 
 .header-content {
-  display: flex;
-  align-items: center; /* Aligns the image and text vertically */
-  text-decoration:none;
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 60px;
 }
-
-.header-text:hover{
-    color:darkgray;
-}
-
-.header-text:hover h1 {
-    color: darkgray;
-}
-
 
 .header-logo {
-  max-height: 75px; /* Or the width you want your logo to be */
-  margin-right: 20px; /* Adds some space between the logo and the text */
-}
-
-header h1 {
-  font-size: 24px; /* Or the size you prefer */
-  margin: 0;
-  line-height: 1.2; /* Adjusts the spacing between header lines */
-}
-
-header p {
-  font-size: 16px; /* Or the size you prefer */
-  margin: 0;
+    max-height: 50px;
+    margin-right: 20px;
 }
 
 header nav ul {
-    list-style-type: none; /* Removes default bullet points */
+    display: flex;
+    list-style: none;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    height: 100%;
 }
 
 header nav ul li {
-    float: left;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
 }
 
 header nav ul li a {
@@ -66,8 +49,11 @@ header nav ul li a {
     color: black;
     text-align: center;
     text-decoration: none;
-    font-size: 26px;
-    padding: 30px;
+    font-size: 18px;
+    padding: 10px 15px;
+    height: 100%;
+    display: flex;
+    align-items: center;
 }
 
 header nav ul li a:hover {
@@ -75,23 +61,24 @@ header nav ul li a:hover {
     color: black;
 }
 
-
-h2{
-    text-align:center;
-    color: #333;
+header h1 {
+    font-size: 24px;
+    margin: 0;
+    line-height: 1.2;
 }
 
-h3{
-    text-align:center;
-    color:gray;
+header p {
+    font-size: 16px;
+    margin: 0;
 }
 
-/* this avoids the header and footer being fixed over the main */
-main{
+/* Main content styles */
+main {
     padding-bottom: 80px;
     padding-top: 80px;
 }
 
+/* General body styles */
 body {
     font-family: 'Arial', sans-serif;
     background: url('AI Juniors background.webp') no-repeat center center fixed;
@@ -102,32 +89,28 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    padding-top: 10px; /* Adjust this value based on your header's height */
-    padding-bottom: 10px; /* Adjust this value based on your footer's height */
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-/* FAQ page */
-
-/* Ensure your FAQ container looks nice */
+/* FAQ styles */
 .faq-container {
     background-color: #FFF2D4;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px; /* Maximum width of the container */
-    margin: 0 auto; /* Center the container */
-    width: auto; /* Allow the width to adjust based on content */
+    max-width: 800px;
+    margin: 0 auto;
+    width: auto;
 }
 
-/* Style for individual FAQ items */
 .faq-item {
     margin-bottom: 10px;
-    overflow: hidden; /* This ensures no overflow of content */
-    transition: max-height 0.3s ease-in-out; /* Smooth transition */
-    max-height: 40px; /* Adjust this value based on the height of your question button */
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    max-height: 40px;
 }
 
-/* Style for FAQ question buttons */
 .faq-question {
     width: 100%;
     text-align: left;
@@ -147,7 +130,6 @@ body {
     background-color: #f4ce75;
 }
 
-/* Style for FAQ answers */
 .faq-answer {
     padding: 10px;
     border-top: 1px solid #ddd;
@@ -158,92 +140,83 @@ body {
     transition: max-height 0.3s ease-in-out;
 }
 
-/* Add class for opened FAQ items */
 .faq-item.open {
-    max-height: 500px; /* Adjust this value based on the content height */
+    max-height: 500px;
 }
 
 .faq-item.open .faq-answer {
-    max-height: 500px; /* Adjust this value based on the content height */
+    max-height: 500px;
 }
 
-
-
-/* containers and boxes */
+/* Containers and boxes */
 .container {
     display: flex;
-    flex-direction: column; /* Stacks children vertically */
-    flex-wrap:wrap;
-    align-items: center;    /* Centers children horizontally */
-    justify-content: center; /* Centers content vertically in the container */
-    width: 100%;            /* Takes full width of its parent element */
-    height: auto;           /* Auto-adjusts height based on content */
- }
- 
- 
- .box {
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+}
+
+.box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 300px;
     height: 300px;
-    margin-left:25px;
-    margin-right:25px; /* Adjust spacing between boxes */
+    margin-left: 25px;
+    margin-right: 25px;
     background-color: #fcfeff;
     box-shadow: 5px 20px 16px rgba(0,0,0,0.1);
     border-radius: 15px;
- }
+}
 
- .text-box{
+.text-box {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 300px;
     height: 50px;
-    margin-left: 25px; /* Adjust spacing between boxes */
+    margin-left: 25px;
     margin-right: 25px;
     margin-top: 5px;
     background-color: #fcfeff;
     box-shadow: 5px 20px 16px rgba(0,0,0,0.1);
     border-radius: 15px;
- }
- 
- .boxes-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
- }
- 
- 
-    .box a {
-    display: flex;       /* Makes the anchor a flex container */
-    justify-content: center; /* Centers children horizontally */
-    align-items: center; /* Centers children vertically */
-    width: 100%;         /* Takes full width of its parent .box */
-    height: 100%;        /* Takes full height of its parent .box */
- }
- 
- 
-    .box img {
-        width: 75%;        /* Adjust width as needed, up to 75% of the parent container */
-        height: auto;      /* Maintain aspect ratio */
-        display: block;    /* Ensure it's treated as block-level for better control */
-    }
- .text-box {
     text-align: center;
     background-color: none;
     margin-top: 10px;
- }
- 
- /* links using <a */
- a {
-    color:black; /* Replace 'blue' with your preferred color */
-    text-decoration: none; /* Removes underline from links */
 }
 
+.boxes-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.box a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.box img {
+    width: 75%;
+    height: auto;
+    display: block;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+/* Custom file upload button */
 .custom-file-upload {
     border: 1px solid #ccc;
     display: inline-block;
@@ -251,10 +224,8 @@ body {
     cursor: pointer;
     border-radius: 4px;
     background-color: #fff;
-    /* width: 100%; */
-    text-align: center;
-    margin-bottom:10px;
-    margin-top:10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .custom-file-upload:hover {
@@ -274,7 +245,7 @@ input[type="file"] + label {
     max-width: 100%;
     font-size: 16px;
     font-weight: 700;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
     display: inline-block;
@@ -282,142 +253,129 @@ input[type="file"] + label {
     padding: 10px;
 }
 
+/* Button styles */
 button {
-    background: #FFF2D4;
-    color: white;
+    background: #f4ce75;
+    color: black;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
-    margin:5px;
+    margin: 5px;
 }
 
 button:hover {
     background: #ebedef;
 }
 
-footer {
-    position: fixed; /* Fixed position */
-    bottom: 0; /* Align to the bottom of the page */
-    left: 0; /* Align to the left of the page */
-    background-color: #FFF2D4;
-    padding: 2px 10px;
-    text-align: center;
-    z-index: 1000; /* Ensure it stays on top of other content */
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.2); /* Optional: adds shadow for depth */
-    /* color: green; */
-    color: #404040;
-    font-size:12px;
-    /* right: 0 !important; */
-}
-@media screen and (min-width: 768px) {
-
-    footer{
-        width: 100%; /* Ensure it stretches across the full width */
-    }
-    }
-
-.result-page{
-    text-align:center
-}
-
-.buttons-result{
-    padding: 10px;
-    color:yellow;
-}
-
-.thumb {
-    /* height: 100px; You can set the size as you need */
-    max-height: 50vh;
-    width: auto;
-    max-width:350px;
-    border: 1px solid #000;
-    /* margin: 10px 5px 0 0; */
-    border-radius:5px;
-    margin-top:10px;
-    /* display:block; */
-}
-
-#imagePreview{
-    display: flex; /* Enables flexbox */
-    justify-content: center; /* Centers content horizontally */
-    align-items: center; /* Centers content vertically */
-    /* height: 100px; /* Or any desired height */
-}
-
-#imagePreview span {
-    display: inline-flex; /* Allows the span to behave like a flex container */
-    justify-content: center; /* Centers content horizontally inside the span */
-    align-items: center; /* Centers content vertically inside the span */
-}
-
-.generate-button{
-    display:none;
-}
-
-/* @keyframes gradient-cycle {
-    0%, 100% {
-      background: linear-gradient(to right, blue, yellow);
-    }
-    50% {
-      background: linear-gradient(to right, yellow, blue);
-    }
-  }
-  
-  .button-animate {
-    animation: gradient-cycle 5s ease infinite;
-  } */
-
-  .generated-image{
-    max-height: 50vh;
-    width: auto;
-    max-width: 100%;
-    display:block;
-    margin-left: auto;
-    margin-right: auto; /* Center the image if it's smaller than its container */
-  }
-
-  .result-buttons{
-    text-align:center;
-    margin:10px;
-  }
-
-
-  /* recording */
-  #audioPlayback {
-    margin-top: 10px;
-    margin:auto;
-}
 button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-/* end recording */
+/* Footer styles */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: #FFF2D4;
+    padding: 2px 10px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+    color: #404040;
+    font-size: 12px;
+}
 
+@media screen and (min-width: 768px) {
+    footer {
+        width: 100%;
+    }
+}
+
+.result-page {
+    text-align: center;
+}
+
+.buttons-result {
+    padding: 10px;
+    color: yellow;
+}
+
+.thumb {
+    max-height: 50vh;
+    width: auto;
+    max-width: 350px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#imagePreview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#imagePreview span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.generate-button {
+    display: none;
+}
+
+.generated-image {
+    max-height: 50vh;
+    width: auto;
+    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.result-buttons {
+    text-align: center;
+    margin: 10px;
+}
+
+/* Recording styles */
+#audioPlayback {
+    margin-top: 10px;
+    margin: auto;
+}
 
 .input-selection-button {
-    /* display: inline-block; */
     padding: 10px 20px;
-    /* background-color: #007bff; */
     color: white;
     text-align: center;
     text-decoration: none;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    height:100px;
-    width:100px;
-    margin-left:20px;
-    margin-right:20px;
-  }
-  
+    height: 100px;
+    width: 100px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
 
-
-  /* Hide the share button on screens wider than 768 pixels */
 @media (min-width: 769px) {
     #shareImageButton {
         display: none;
     }
+}
+
+/* Donate container styles */
+.donate-container {
+    background-color: #FFF2D4;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    width: auto;
+    text-align: center;
 }

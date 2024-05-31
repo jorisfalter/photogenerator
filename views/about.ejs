@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+
+<%- include('partials/head') %>
+
 <body>
     <%- include('partials/header') %>
 
     <div class="container-about">
+        <h1 class="founder-title">Welcome to AI-Juniors!</h1>
+        <div class="founder-pic">
+            <img src="Marjon no background.jpg" alt="Founder Picture">
+        </div>
         <div class="founder-message">
-            <p><h2>Welcome to AI-Juniors!</h2></p> 
             <p>As a primary school teacher with multiple years experience in an Inquiry based learning environment, I founded AI-Juniors to help children learn about the pros and cons of artificial intelligence in a safe, controlled environment. Our mission is to seamlessly integrate AI tools into classroom experiences, making technology both accessible and relevant for young learners.</p>
             <p>The idea came to me when I noticed a lack of integrated educational technology tools. I wanted to create something that allows children to explore AI within the context of their current studies, making the learning process more meaningful.</p>
             <p>At AI-Juniors we believe it's important for all children to experience various technology tools. For this reason we offer our services for free.</p>
@@ -21,14 +21,10 @@
             <p>Marjon Hofman</p>                
             <p>Founder AI-Juniors</p>
         </div>
-        <div class="founder-pic">
-            <img src="Marjon no background.jpg" alt="Founder Picture">
-        </div>
     </div>
 
     <%- include('partials/footer') %>
 
-
-        <script src="index.js"></script>
-        </body>
-    </html>
+    <script src="index.js"></script>
+</body>
+</html>

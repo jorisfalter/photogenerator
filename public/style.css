@@ -101,7 +101,7 @@ body {
 
 /* FAQ styles */
 .faq-container {
-    background-color: #FFF2D4;
+    background-color:  white;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -125,7 +125,7 @@ body {
     outline: none;
     font-size: 16px;
     cursor: pointer;
-    background-color: #FFF2D4;
+    background-color:  rgba(255, 255, 255, 0.878);
     transition: background-color 0.3s;
     color: #000;
     padding: 10px;
@@ -377,48 +377,59 @@ footer {
 /* Donate container styles */
 .donate-container {
     background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 90%;
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between; /* Add space between text and image */
-            align-items: flex-start; /* Align items at the start */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 90%;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+    align-items: center; /* Center-align all children horizontally */
+    text-align: center; /* Center-align the text */
 }
 
 /* about page */
 .container-about {
     background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 90%;
-            margin-top: 600px;
-            display: flex;
-            justify-content: space-between; /* Add space between text and image */
-            align-items: flex-start; /* Align items at the start */
-        }
-        .founder-pic img {
-            max-width: 150px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            margin-left: 20px;
-        }
-        .founder-message {
-            font-size: 1.2em;
-            line-height: 1.6;
-            color: #333;
-            text-align: left;
-            flex: 1; /* Allow the text to take up remaining space */
-            margin-right: 20px; /* Add space between text and image */
-        }
-        .founder-message h2 {
-            text-align: center;
-            color: #333;
-        }
-        .founder-message p {
-            margin-bottom: 30px; /* Increase margin-bottom to add extra space between paragraphs */
-        }
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    width: 90%;
+    margin-top: 600px;
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+    align-items: center; /* Center-align all children horizontally */
+    text-align: center; /* Center-align the text */
+}
+
+.founder-title {
+    margin-bottom: 20px; /* Space between title and photos */
+}
+
+.founder-pic {
+    margin-bottom: 20px; /* Space between photos and message */
+}
+
+.founder-pic img {
+    max-width: 150px;
+    border-radius: 50%;
+    margin: 0 10px; /* Space between photos if there are multiple */
+}
+
+.founder-message {
+    font-size: 1.2em;
+    line-height: 1.6;
+    color: #333;
+    text-align: left; /* Align text to the left */
+}
+
+.founder-message h2 {
+    text-align: center;
+    color: #333;
+}
+
+.founder-message p {
+    margin-bottom: 30px; /* Increase margin-bottom to add extra space between paragraphs */
+}

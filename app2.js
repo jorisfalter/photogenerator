@@ -169,6 +169,10 @@ app.get('/FAQ', (req, res) => {
   res.render("FAQ");
 });
 
+app.get('/about', (req, res) => {
+  res.render("about");
+});
+
 
 // Start server
 const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT is not set

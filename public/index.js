@@ -358,3 +358,20 @@ document.addEventListener('DOMContentLoaded', function() {
   // Set the current year in the footer
   document.getElementById('current-year').textContent = new Date().getFullYear();
 });
+
+const express = require('express');
+const app = express();
+
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+    const canonicalUrl = 'https://www.ai-juniors.com' + req.originalUrl;
+    res.render('index', { canonicalUrl: canonicalUrl });
+});
+
+// Additional routes...
+
+app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+

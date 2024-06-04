@@ -173,6 +173,10 @@ app.get('/about', (req, res) => {
   res.render("about");
 });
 
+app.get('/error', (req, res) => {
+  res.render("error");
+});
+
 
 // Start server
 const PORT = process.env.PORT || 3000; // Fallback to 3000 if process.env.PORT is not set

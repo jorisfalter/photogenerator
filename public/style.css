@@ -101,7 +101,7 @@ body {
 
 /* FAQ styles */
 .faq-container {
-    background-color:  white;
+    background-color: white;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -125,11 +125,20 @@ body {
     outline: none;
     font-size: 16px;
     cursor: pointer;
-    background-color:  rgba(255, 255, 255, 0.878);
+    background-color: rgba(255, 255, 255, 0.878);
     transition: background-color 0.3s;
     color: #000;
     padding: 10px;
     border-radius: 5px;
+    display: block; /* Ensure the button is a block element */
+    white-space: normal; /* Allow text wrapping */
+}
+
+.faq-question h1 {
+    font-size: 18px; /* Reduced font size */
+    margin: 0;
+    white-space: normal; /* Allow text wrapping */
+    line-height: 1.4; /* Add some line height for better readability */
 }
 
 .faq-question:hover {
@@ -153,6 +162,8 @@ body {
 .faq-item.open .faq-answer {
     max-height: 500px;
 }
+
+
 
 /* Containers and boxes */
 .container {

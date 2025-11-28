@@ -37,23 +37,27 @@ let image_url_pass; // variable to pass the image url to the download
 // call openai api to generate an Image - used both by Audio and Text
 async function generateImage(taskId, promptText) {
   console.log("starting to generate an image");
-  // in the new offloaded process, I should add a "try" here
+  
+  try {
+    const response = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: promptText,
+      n: 1,
+      size: "1024x1024",
+    });
 
-  const response = await openai.images.generate({
-    model: "dall-e-3",
-    prompt: promptText,
-    n: 1,
-    size: "1024x1024",
-  });
+    // Update the task with the result
+    const imageUrl = response.data[0].url;
+    tasks[taskId] = { status: "completed", imageUrl: imageUrl };
+    console.log("Image generation completed for task:", taskId);
 
-  // Update the task with the result
-  const imageUrl = response.data[0].url;
-  tasks[taskId] = { status: "completed", imageUrl: imageUrl };
-  // console.log("tasks");
-  // console.log(taskId);
-  // console.log(tasks[taskId]);
-
-  return response;
+    return response;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    // Update task status to failed
+    tasks[taskId] = { status: "failed", imageUrl: null, error: error.message };
+    throw error;
+  }
 }
 
 ///////////////////// Pics ////////////////////////////
@@ -81,7 +85,9 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
             },
             {
               type: "image_url",
-              image_url: `data:image/jpeg;base64,${base64Image}`,
+              image_url: {
+                url: `data:image/jpeg;base64,${base64Image}`
+              },
             },
           ],
         },
@@ -126,7 +132,11 @@ app.get("/status/:taskId", (req, res) => {
   const task = tasks[taskId];
 
   if (task) {
-    res.json({ status: task.status, imageUrl: task.imageUrl });
+    res.json({ 
+      status: task.status, 
+      imageUrl: task.imageUrl,
+      error: task.error || null
+    });
   } else {
     res.status(404).json({ error: "Task not found" });
   }
@@ -136,16 +146,27 @@ app.get("/result/:taskId", (req, res) => {
   const taskId = req.params.taskId;
   const task = tasks[taskId];
 
+  // Check if task exists first
+  if (!task) {
+    return res.status(404).render("error", {
+      error: "Task not found.",
+    });
+  }
+
   // image_url_pass = task.imageUrl;
   req.session.imageUrl = task.imageUrl;
   // console.log("req.session.imageUrl pic");
   // console.log(req.session.imageUrl);
 
-  if (task && task.status === "completed") {
+  if (task.status === "completed") {
     res.render("result", {
       image_url: task.imageUrl,
       description: "picInputNoDescription", // the results page expects a description variable for the audio, so we send a hardcoded string
       // description: task.description, // Assuming you stored the description as well
+    });
+  } else if (task.status === "failed") {
+    res.status(500).render("error", {
+      error: `Image generation failed: ${task.error || "Unknown error"}`,
     });
   } else {
     res.status(404).render("error", {

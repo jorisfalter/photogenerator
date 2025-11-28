@@ -84,6 +84,24 @@ main {
     padding-top: 80px;
 }
 
+main > h1 {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+main > h2 {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 12px 25px;
+    border-radius: 10px;
+    margin: 10px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* General body styles */
 body {
     font-family: 'Arial', sans-serif;
@@ -314,6 +332,20 @@ footer {
 
 .result-page {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 160px);
+    padding: 20px;
+}
+
+.result-page h1 {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 15px 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
 }
 
 .buttons-result {
@@ -347,17 +379,38 @@ footer {
 }
 
 .generated-image {
-    max-height: 50vh;
+    max-height: 60vh;
     width: auto;
-    max-width: 100%;
+    max-width: 90%;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .result-buttons {
     text-align: center;
-    margin: 10px;
+    margin: 30px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.result-buttons button {
+    min-width: 150px;
+    padding: 12px 24px;
+    font-size: 16px;
+}
+
+.description-text {
+    text-align: center;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
 }
 
 /* Recording styles */
@@ -477,14 +530,16 @@ footer {
         padding-bottom: 70px;
     }
     
-    main h1 {
+    main > h1 {
         font-size: 24px;
-        padding: 0 20px;
+        padding: 12px 20px;
+        margin: 8px 15px;
     }
     
-    main h2 {
+    main > h2 {
         font-size: 18px;
-        padding: 0 20px;
+        padding: 10px 18px;
+        margin: 8px 15px;
     }
     
     /* Box adjustments for mobile */
@@ -525,12 +580,16 @@ footer {
         margin-right: 10px;
     }
     
-    main h1 {
+    main > h1 {
         font-size: 20px;
+        padding: 10px 15px;
+        margin: 8px 10px;
     }
     
-    main h2 {
+    main > h2 {
         font-size: 16px;
+        padding: 8px 12px;
+        margin: 8px 10px;
     }
     
     .box {
@@ -547,5 +606,20 @@ footer {
     
     .text-box h2 {
         font-size: 14px;
+    }
+    
+    .generated-image {
+        max-width: 95%;
+        max-height: 50vh;
+    }
+    
+    .result-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .result-buttons button {
+        width: 90%;
+        max-width: 300px;
     }
 }

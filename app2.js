@@ -70,7 +70,7 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
 
     // create the payload to send it to openai to get a description
     const payload = {
-      model: "gpt-4-vision-preview",
+      model: "gpt-4o",
       messages: [
         {
           role: "user",

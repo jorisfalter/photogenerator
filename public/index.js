@@ -35,6 +35,10 @@ function handlePicSubmit(event) {
   event.preventDefault();
 
   const formData = new FormData(event.target);
+  
+  // Show loading animation
+  document.getElementById("loadingAnimationId").style.display = "block";
+  document.getElementById("uploadForm").style.display = "none";
 
   fetch("/upload", {
     method: "POST",
@@ -46,9 +50,17 @@ function handlePicSubmit(event) {
       pollStatus(data.taskId);
     } else {
       console.error("No task ID returned from server");
+      document.getElementById("loadingAnimationId").innerHTML = 
+        '<p style="color: red;">❌ Error: No task ID received. Please try again.</p>' +
+        '<a href="/image"><button>Try Again</button></a>';
     }
   })
-  .catch((error) => console.error("Error uploading image:", error));
+  .catch((error) => {
+    console.error("Error uploading image:", error);
+    document.getElementById("loadingAnimationId").innerHTML = 
+      '<p style="color: red;">❌ Upload failed. Please try again.</p>' +
+      '<a href="/image"><button>Try Again</button></a>';
+  });
 }
 
 function showLoadingAnimation() {
@@ -79,11 +91,23 @@ function pollStatus(taskId) {
         window.location.href = `/result/${taskId}`;
       } else if (data.status === "pending") {
         setTimeout(() => pollStatus(taskId), 5000);
+      } else if (data.status === "failed") {
+        document.getElementById("loadingAnimationId").innerHTML = 
+          '<p style="color: red;">❌ Image generation failed. Please try again.</p>' +
+          '<a href="/image"><button>Try Again</button></a>';
       } else {
         console.error("Task failed or unknown status");
+        document.getElementById("loadingAnimationId").innerHTML = 
+          '<p style="color: red;">❌ Something went wrong. Please try again.</p>' +
+          '<a href="/image"><button>Try Again</button></a>';
       }
     })
-    .catch((error) => console.error("Error polling task status:", error));
+    .catch((error) => {
+      console.error("Error polling task status:", error);
+      document.getElementById("loadingAnimationId").innerHTML = 
+        '<p style="color: red;">❌ Connection error. Please try again.</p>' +
+        '<a href="/image"><button>Try Again</button></a>';
+    });
 }
 
 // Initialize recording functionality
@@ -171,6 +195,8 @@ function initRecording() {
 // Countdown functionality
 function startCountdown() {
   let countdownElement = document.getElementById("countdown");
+  if (!countdownElement) return;
+  
   let countdownTime = parseInt(countdownElement.textContent, 10);
 
   let timer = setInterval(() => {
@@ -179,7 +205,10 @@ function startCountdown() {
 
     if (countdownTime <= 0) {
       clearInterval(timer);
-      document.getElementById("loadingAnimationId").textContent = "Done thinking!";
+      const loadingDiv = document.getElementById("loadingAnimationId");
+      loadingDiv.innerHTML = 
+        '<div class="spinner"></div>' +
+        '<p>Almost there! Still generating...</p>';
     }
   }, 1000);
 }
@@ -284,19 +313,3 @@ function initApp() {
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
-
-// Express server setup
-const express = require('express');
-const app = express();
-
-app.set('view engine', 'ejs');
-
-app.get('/', (req, res) => {
-  res.render('index');
-});
-
-// Additional routes...
-
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
-});

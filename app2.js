@@ -7,32 +7,83 @@ const app = express();
 const OpenAI = require("openai");
 const path = require("path");
 const axios = require("axios"); // for audio
-const fs = require("fs");
-const fetch = require("node-fetch");
-const uuid = require("uuid");
+const crypto = require("crypto");
+const helmet = require("helmet");
+const { rateLimit } = require("express-rate-limit");
+
+const openAiApiKey = process.env.OPENAI_API_KEY || process.env.API_KEY;
+const sessionKey = process.env.SESSION_SECRET || process.env.SESSION_KEY;
+
+if (!openAiApiKey || !sessionKey) {
+  throw new Error("OPENAI_API_KEY/API_KEY and SESSION_SECRET/SESSION_KEY are required");
+}
 
 app.set("view engine", "ejs"); // Set EJS as the template engine
+app.set("trust proxy", 1);
+app.disable("x-powered-by");
 
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.static("public"));
 
 const session = require("express-session");
 app.use(
   session({
-    secret: process.env.SESSION_KEY || "your secret key", // update this!
+    secret: sessionKey,
     resave: false,
-    saveUninitialized: true,
-    // cookie: { secure: true }, // turn off for local
+    saveUninitialized: false,
+    proxy: true,
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 1000,
+    },
   })
 );
 
 const tasks = {}; // List of tasks which are brought to the background. This would ideally be a persistent storage solution
+const taskTtlMs = 60 * 60 * 1000;
+const maxTasks = 200;
 
-// Configure multer for memory storage
-const storage = multer.memoryStorage();
-const upload = multer({ storage: multer.memoryStorage() });
-const openAiApiKey = process.env.API_KEY;
+function pruneTasks() {
+  const now = Date.now();
+  for (const [taskId, task] of Object.entries(tasks)) {
+    if (task.expiresAt <= now) {
+      delete tasks[taskId];
+    }
+  }
+
+  const taskIds = Object.keys(tasks);
+  for (const taskId of taskIds.slice(0, Math.max(0, taskIds.length - maxTasks))) {
+    delete tasks[taskId];
+  }
+}
+
+setInterval(pruneTasks, 10 * 60 * 1000).unref();
+
+const uploadLimits = { fileSize: 10 * 1024 * 1024, files: 1 };
+const imageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: uploadLimits,
+  fileFilter: (_req, file, callback) => {
+    callback(null, /^image\/(jpeg|png|webp)$/.test(file.mimetype));
+  },
+});
+const audioUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: uploadLimits,
+  fileFilter: (_req, file, callback) => {
+    callback(null, /^audio\/[a-z0-9.+-]+$/i.test(file.mimetype));
+  },
+});
+const generationLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many generation requests. Please try again later." },
+});
 const openai = new OpenAI({ apiKey: openAiApiKey });
-let image_url_pass; // variable to pass the image url to the download
 
 // call openai api to generate an Image - used both by Audio and Text
 async function generateImage(taskId, promptText) {
@@ -48,22 +99,34 @@ async function generateImage(taskId, promptText) {
 
     // Update the task with the result
     const imageUrl = response.data[0].url;
-    tasks[taskId] = { status: "completed", imageUrl: imageUrl };
+    tasks[taskId] = {
+      status: "completed",
+      imageUrl,
+      expiresAt: Date.now() + taskTtlMs,
+    };
     console.log("Image generation completed for task:", taskId);
 
     return response;
   } catch (error) {
     console.error("Error generating image:", error);
     // Update task status to failed
-    tasks[taskId] = { status: "failed", imageUrl: null, error: error.message };
+    tasks[taskId] = {
+      status: "failed",
+      imageUrl: null,
+      error: "Image generation failed",
+      expiresAt: Date.now() + taskTtlMs,
+    };
     throw error;
   }
 }
 
 ///////////////////// Pics ////////////////////////////
 // Describe the pic first
-app.post("/upload", upload.single("picture"), async (req, res) => {
+app.post("/upload", generationLimiter, imageUpload.single("picture"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "A JPEG, PNG, or WebP image is required" });
+    }
     const imageBuffer = req.file.buffer;
     const base64Image = imageBuffer.toString("base64");
 
@@ -101,7 +164,6 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
     });
 
     const descriptionInput = response.choices[0].message.content;
-    console.log(descriptionInput);
     const description =
       "Generate a photo realistic image of:" 
       +descriptionInput+ 
@@ -109,10 +171,15 @@ app.post("/upload", upload.single("picture"), async (req, res) => {
 
     // Start on the image generation
     // Generate a unique task ID
-    const taskId = uuid.v4(); // Ensure you have 'uuid' installed and imported
+    const taskId = crypto.randomUUID();
 
     // Save the task information in a database or in-memory store, For demonstration purposes, we're using an in-memory object
-    tasks[taskId] = { status: "pending", imageUrl: null };
+    pruneTasks();
+    tasks[taskId] = {
+      status: "pending",
+      imageUrl: null,
+      expiresAt: Date.now() + taskTtlMs,
+    };
 
     // Call function to generate an image from text
     // const imageGenResponse = await
@@ -182,6 +249,10 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+app.get("/healthz", (_req, res) => {
+  res.status(200).json({ status: "ok" });
+});
+
 app.get("/test", (req, res) => {
   res.render("result");
 });
@@ -227,16 +298,13 @@ async function convertSpeechToText(audioBuffer, fileName) {
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (error.response) {
       console.log("axios foutje");
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx
-      console.error(error.response.data);
-      console.error(error.response.status);
-      console.error(error.response.headers);
+      console.error("OpenAI transcription failed with status", error.response.status);
     } else if (error.request) {
       // The request was made but no response was received
       console.error(error.request);
@@ -244,7 +312,6 @@ async function convertSpeechToText(audioBuffer, fileName) {
       // Something happened in setting up the request that triggered an Error
       console.error("Error", error.message);
     }
-    console.error(error.config);
   }
 }
 
@@ -254,13 +321,9 @@ async function generateImageFromText(req, textPrompt) {
     // Call function to generate an image from text
     const imageGenResponse = await generateImage("dummy_taskID", textPrompt);
 
-    image_url = imageGenResponse.data[0].url;
-    // image_url_pass = image_url;
-    req.session.imageUrl = image_url;
-    console.log("req.session.imageUrl audio");
-    console.log(req.session.imageUrl);
-
-    return image_url;
+    const imageUrl = imageGenResponse.data[0].url;
+    req.session.imageUrl = imageUrl;
+    return imageUrl;
   } catch (error) {
     console.error("Error generating image from text:", error);
     throw error;
@@ -268,7 +331,7 @@ async function generateImageFromText(req, textPrompt) {
 }
 
 //// audio endpoint - what is this again?
-app.post("/upload-audio", upload.single("audioFile"), async (req, res) => {
+app.post("/upload-audio", generationLimiter, audioUpload.single("audioFile"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
@@ -300,7 +363,6 @@ app.get("/result", (req, res) => {
   // Extract query parameters
   const { image_url, description } = req.query;
   console.log("we're now in the result page");
-  console.log(req.session.imageUrl);
   res.render("result", {
     image_url: image_url,
     description: description,
@@ -331,15 +393,24 @@ app.get("/donate", (req, res) => {
 app.get("/fetch-openai-image", async (req, res) => {
   // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");
-  console.log(req.session.imageUrl);
-  // const imageUrl = image_url_pass;
   const imageUrlSession = req.session.imageUrl;
-  console.log("imageUrlSession:");
-  console.log(imageUrlSession);
 
   try {
+    if (!imageUrlSession) {
+      return res.status(404).send("No generated image is available.");
+    }
+    const parsedUrl = new URL(imageUrlSession);
+    if (
+      parsedUrl.protocol !== "https:" ||
+      !parsedUrl.hostname.endsWith(".blob.core.windows.net")
+    ) {
+      return res.status(400).send("Invalid generated image URL.");
+    }
     const response = await fetch(imageUrlSession);
-    const imageBuffer = await response.buffer();
+    if (!response.ok) {
+      throw new Error(`Image provider returned HTTP ${response.status}`);
+    }
+    const imageBuffer = Buffer.from(await response.arrayBuffer());
 
     // Forward the image content type and buffer
     res.type(response.headers.get("content-type"));
@@ -355,5 +426,10 @@ app.get('/FAQ', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'FAQ.html'));
 });
 
-
-
+app.use((error, _req, res, _next) => {
+  if (error instanceof multer.MulterError) {
+    return res.status(413).json({ error: "Upload is too large" });
+  }
+  console.error("Unhandled request error:", error.name);
+  return res.status(500).json({ error: "Unexpected server error" });
+});

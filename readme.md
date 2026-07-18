@@ -22,7 +22,7 @@ A web application that helps primary school children create AI-generated images 
 
 ## 📋 Prerequisites
 
-- Node.js 18.16.1 or higher
+- Node.js 22
 - OpenAI API key with access to GPT-4o and DALL-E 3
 
 ## 🚀 Installation
@@ -112,6 +112,9 @@ photogenerator/
 | `OPENAI_API_KEY` | Your OpenAI API key           | Yes      |
 | `SESSION_SECRET` | Secret for session encryption | Yes      |
 
+The legacy Heroku names `API_KEY` and `SESSION_KEY` remain supported during
+migration, but new deployments should use the names above.
+
 ## 📱 Browser Support
 
 - Chrome/Edge (latest)
@@ -121,31 +124,23 @@ photogenerator/
 
 ## 🚢 Deployment
 
-### Heroku
+### Docker Compose
 
-1. **Create a Heroku app**
+The production Compose file runs the app as a non-root user, binds it only to
+`127.0.0.1:9124`, and exposes `/healthz` for health checks.
 
-   ```bash
-   heroku create your-app-name
-   ```
+```bash
+cat > .env <<'EOF'
+OPENAI_API_KEY=<secret>
+SESSION_SECRET=<long-random-secret>
+EOF
+chmod 600 .env
+docker compose up -d --build
+curl -fsS http://127.0.0.1:9124/healthz
+```
 
-2. **Set environment variables**
-
-   ```bash
-   heroku config:set OPENAI_API_KEY=your_key
-   heroku config:set SESSION_SECRET=your_secret
-   ```
-
-3. **Deploy**
-   ```bash
-   git push heroku main
-   ```
-
-### Render / Railway
-
-1. Connect your GitHub repository
-2. Set environment variables in the dashboard
-3. Deploy automatically on push
+Public routing should terminate at a reverse proxy or tunnel. Do not publish
+the container port directly.
 
 ### Important Notes
 

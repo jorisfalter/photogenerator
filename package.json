@@ -21,6 +21,7 @@
     "express-session": "^1.18.0",
     "form-data": "^4.0.0",
     "helmet": "^8.3.0",
+    "memorystore": "^1.6.8",
     "multer": "^2.2.0",
     "openai": "^4.20.1"
   }

@@ -26,9 +26,11 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(express.static("public"));
 
 const session = require("express-session");
+const MemoryStore = require("memorystore")(session);
 app.use(
   session({
     secret: sessionKey,
+    store: new MemoryStore({ checkPeriod: 60 * 60 * 1000 }),
     resave: false,
     saveUninitialized: false,
     proxy: true,

@@ -87,6 +87,13 @@ const generationLimiter = rateLimit({
 });
 const openai = new OpenAI({ apiKey: openAiApiKey });
 
+function logOperationalError(stage, error) {
+  const name = error && error.name ? error.name : "Error";
+  const status = error && error.status ? error.status : "unknown";
+  const code = error && error.code ? error.code : "unknown";
+  console.error(`${stage}: ${name} status=${status} code=${code}`);
+}
+
 // call openai api to generate an Image - used both by Audio and Text
 async function generateImage(taskId, promptText) {
   console.log("starting to generate an image");
@@ -110,7 +117,7 @@ async function generateImage(taskId, promptText) {
 
     return response;
   } catch (error) {
-    console.error("Error generating image:", error);
+    logOperationalError("Image generation failed", error);
     // Update task status to failed
     tasks[taskId] = {
       status: "failed",
@@ -190,7 +197,7 @@ app.post("/upload", generationLimiter, imageUpload.single("picture"), async (req
     // Respond immediately with the task ID
     res.json({ taskId: taskId });
   } catch (error) {
-    console.error("Error:", error);
+    logOperationalError("Image upload processing failed", error);
     res.status(500).json({ error: "Error processing image" });
   }
 });
@@ -302,18 +309,7 @@ async function convertSpeechToText(audioBuffer, fileName) {
     );
     return response.data;
   } catch (error) {
-    if (error.response) {
-      console.log("axios foutje");
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.error("OpenAI transcription failed with status", error.response.status);
-    } else if (error.request) {
-      // The request was made but no response was received
-      console.error(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.error("Error", error.message);
-    }
+    logOperationalError("Audio transcription failed", error);
   }
 }
 
@@ -327,7 +323,7 @@ async function generateImageFromText(req, textPrompt) {
     req.session.imageUrl = imageUrl;
     return imageUrl;
   } catch (error) {
-    console.error("Error generating image from text:", error);
+    logOperationalError("Audio image generation failed", error);
     throw error;
   }
 }
@@ -355,7 +351,7 @@ app.post("/upload-audio", generationLimiter, audioUpload.single("audioFile"), as
       description: text,
     });
   } catch (error) {
-    console.error("Error processing audio file:", error);
+    logOperationalError("Audio upload processing failed", error);
     res.status(500).send("Error processing audio file.");
   }
 });
@@ -418,7 +414,7 @@ app.get("/fetch-openai-image", async (req, res) => {
     res.type(response.headers.get("content-type"));
     res.send(imageBuffer);
   } catch (error) {
-    console.error("Error fetching image:", error);
+    logOperationalError("Generated image fetch failed", error);
     res.status(500).send("Error fetching image");
   }
 });

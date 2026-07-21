@@ -15,7 +15,7 @@ A web application that helps primary school children create AI-generated images 
 
 - **Backend**: Node.js, Express.js
 - **Template Engine**: EJS
-- **AI Services**: OpenAI (GPT-4o for vision, DALL-E 3 for image generation)
+- **AI Services**: OpenAI (GPT-4o for vision, GPT Image for image generation)
 - **Session Management**: express-session
 - **File Uploads**: Multer
 - **Audio Processing**: RecordRTC
@@ -23,7 +23,7 @@ A web application that helps primary school children create AI-generated images 
 ## 📋 Prerequisites
 
 - Node.js 22
-- OpenAI API key with access to GPT-4o and DALL-E 3
+- OpenAI API key with access to GPT-4o and GPT Image
 
 ## 🚀 Installation
 
@@ -95,14 +95,14 @@ photogenerator/
 1. Student uploads a hand-drawn picture
 2. Image is sent to OpenAI's GPT-4o vision model for description
 3. Description is enhanced with prompt engineering
-4. DALL-E 3 generates a photorealistic image based on the description
+4. GPT Image generates a photorealistic image based on the description
 5. Result is displayed with download/share options
 
 ### Voice to Image Flow
 
 1. Student records their voice describing an image
 2. Audio is converted to text using OpenAI's Whisper
-3. Text is used as a prompt for DALL-E 3
+3. Text is used as a prompt for GPT Image
 4. Generated image is displayed with options
 
 ## 🔧 Environment Variables
@@ -111,6 +111,7 @@ photogenerator/
 | ---------------- | ----------------------------- | -------- |
 | `OPENAI_API_KEY` | Your OpenAI API key           | Yes      |
 | `SESSION_SECRET` | Secret for session encryption | Yes      |
+| `OPENAI_IMAGE_MODEL` | Image model; defaults to `gpt-image-2` | No |
 
 The legacy Heroku names `API_KEY` and `SESSION_KEY` remain supported during
 migration, but new deployments should use the names above.
@@ -176,7 +177,7 @@ This is an educational project for AI-Juniors. For questions or contributions, p
 
 ## 🙏 Acknowledgments
 
-- OpenAI for GPT-4o and DALL-E 3 APIs
+- OpenAI for GPT-4o and GPT Image APIs
 - RecordRTC for audio recording functionality
 - The educational community for feedback and support
 

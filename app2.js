@@ -8,6 +8,7 @@ const OpenAI = require("openai");
 const path = require("path");
 const axios = require("axios"); // for audio
 const crypto = require("crypto");
+const fs = require("fs");
 const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
 
@@ -45,19 +46,34 @@ app.use(
 
 const tasks = {}; // List of tasks which are brought to the background. This would ideally be a persistent storage solution
 const taskTtlMs = 60 * 60 * 1000;
-const maxTasks = 200;
+const maxTasks = 12;
+const generatedImageDirectory = "/tmp/ai-juniors-images";
+
+fs.mkdirSync(generatedImageDirectory, { recursive: true });
+
+function deleteTask(taskId) {
+  const task = tasks[taskId];
+  if (task && task.imagePath) {
+    fs.unlink(task.imagePath, (error) => {
+      if (error && error.code !== "ENOENT") {
+        logOperationalError("Generated image cleanup failed", error);
+      }
+    });
+  }
+  delete tasks[taskId];
+}
 
 function pruneTasks() {
   const now = Date.now();
   for (const [taskId, task] of Object.entries(tasks)) {
     if (task.expiresAt <= now) {
-      delete tasks[taskId];
+      deleteTask(taskId);
     }
   }
 
   const taskIds = Object.keys(tasks);
   for (const taskId of taskIds.slice(0, Math.max(0, taskIds.length - maxTasks))) {
-    delete tasks[taskId];
+    deleteTask(taskId);
   }
 }
 
@@ -100,22 +116,31 @@ async function generateImage(taskId, promptText) {
   
   try {
     const response = await openai.images.generate({
-      model: "dall-e-3",
+      model: process.env.OPENAI_IMAGE_MODEL || "gpt-image-2",
       prompt: promptText,
       n: 1,
       size: "1024x1024",
+      quality: "low",
     });
 
-    // Update the task with the result
-    const imageUrl = response.data[0].url;
+    const imageBase64 = response.data[0] && response.data[0].b64_json;
+    if (!imageBase64) {
+      throw new Error("Image provider returned no image data");
+    }
+
+    const imagePath = path.join(generatedImageDirectory, `${taskId}.png`);
+    await fs.promises.writeFile(imagePath, Buffer.from(imageBase64, "base64"));
+    const imageUrl = `/generated/${taskId}`;
     tasks[taskId] = {
       status: "completed",
       imageUrl,
+      imagePath,
+      imageMimeType: "image/png",
       expiresAt: Date.now() + taskTtlMs,
     };
-    console.log("Image generation completed for task:", taskId);
+    console.log("Image generation completed");
 
-    return response;
+    return imageUrl;
   } catch (error) {
     logOperationalError("Image generation failed", error);
     // Update task status to failed
@@ -192,7 +217,7 @@ app.post("/upload", generationLimiter, imageUpload.single("picture"), async (req
 
     // Call function to generate an image from text
     // const imageGenResponse = await
-    generateImage(taskId, description);
+    void generateImage(taskId, description).catch(() => {});
 
     // Respond immediately with the task ID
     res.json({ taskId: taskId });
@@ -218,6 +243,16 @@ app.get("/status/:taskId", (req, res) => {
   }
 });
 
+app.get("/generated/:taskId", (req, res) => {
+  pruneTasks();
+  const task = tasks[req.params.taskId];
+  if (!task || task.status !== "completed" || !task.imagePath) {
+    return res.status(404).send("Generated image not found.");
+  }
+  res.type(task.imageMimeType || "image/png");
+  res.sendFile(task.imagePath);
+});
+
 app.get("/result/:taskId", (req, res) => {
   const taskId = req.params.taskId;
   const task = tasks[taskId];
@@ -230,7 +265,7 @@ app.get("/result/:taskId", (req, res) => {
   }
 
   // image_url_pass = task.imageUrl;
-  req.session.imageUrl = task.imageUrl;
+  req.session.imageTaskId = taskId;
   // console.log("req.session.imageUrl pic");
   // console.log(req.session.imageUrl);
 
@@ -316,11 +351,15 @@ async function convertSpeechToText(audioBuffer, fileName) {
 // Generate an image from text - only used for audio
 async function generateImageFromText(req, textPrompt) {
   try {
-    // Call function to generate an image from text
-    const imageGenResponse = await generateImage("dummy_taskID", textPrompt);
-
-    const imageUrl = imageGenResponse.data[0].url;
-    req.session.imageUrl = imageUrl;
+    const taskId = crypto.randomUUID();
+    pruneTasks();
+    tasks[taskId] = {
+      status: "pending",
+      imageUrl: null,
+      expiresAt: Date.now() + taskTtlMs,
+    };
+    const imageUrl = await generateImage(taskId, textPrompt);
+    req.session.imageTaskId = taskId;
     return imageUrl;
   } catch (error) {
     logOperationalError("Audio image generation failed", error);
@@ -389,30 +428,15 @@ app.get("/donate", (req, res) => {
 
 // to download the pics
 app.get("/fetch-openai-image", async (req, res) => {
-  // Get the image URL from query params or send it in the request
   console.log("we're now in the fetch");
-  const imageUrlSession = req.session.imageUrl;
+  const task = tasks[req.session.imageTaskId];
 
   try {
-    if (!imageUrlSession) {
+    if (!task || task.status !== "completed" || !task.imagePath) {
       return res.status(404).send("No generated image is available.");
     }
-    const parsedUrl = new URL(imageUrlSession);
-    if (
-      parsedUrl.protocol !== "https:" ||
-      !parsedUrl.hostname.endsWith(".blob.core.windows.net")
-    ) {
-      return res.status(400).send("Invalid generated image URL.");
-    }
-    const response = await fetch(imageUrlSession);
-    if (!response.ok) {
-      throw new Error(`Image provider returned HTTP ${response.status}`);
-    }
-    const imageBuffer = Buffer.from(await response.arrayBuffer());
-
-    // Forward the image content type and buffer
-    res.type(response.headers.get("content-type"));
-    res.send(imageBuffer);
+    res.type(task.imageMimeType || "image/png");
+    res.sendFile(task.imagePath);
   } catch (error) {
     logOperationalError("Generated image fetch failed", error);
     res.status(500).send("Error fetching image");
